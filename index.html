@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clawri — LazyVim Blog & LaTeX Editor</title>
+  <title>Clawri</title>
 
-  <!-- Fonts per l'interfaccia LazyVim -->
+  <!-- Fonts for LazyVim UI -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
@@ -20,7 +20,6 @@
 
   <style>
     :root {
-      /* Tokyo Night / LazyVim Palette */
       --bg-dark: #16161e;
       --bg-editor: #1a1b26;
       --bg-float: #1f2335;
@@ -59,7 +58,7 @@
       user-select: none;
     }
 
-    /* Layout principale stile LazyVim */
+    /* Main LazyVim Layout */
     .lazy-app {
       display: flex;
       flex-direction: column;
@@ -69,7 +68,7 @@
       gap: 6px;
     }
 
-    /* Barra rapida superiore minimale */
+    /* Minimal Top Bar */
     .lazy-top-bar {
       display: flex;
       justify-content: space-between;
@@ -155,7 +154,7 @@
       border-color: var(--border-active);
     }
 
-    /* Titolo finestra sul bordo stile LazyVim */
+    /* Floating Pane Title on Border */
     .pane-title {
       position: absolute;
       top: -9px;
@@ -215,7 +214,7 @@
       border-left: 2px solid var(--blue) !important;
     }
 
-    /* Cursore a blocco in Normal Mode */
+    /* Block Cursor in Normal Mode */
     .cm-fat-cursor .CodeMirror-cursor {
       background: rgba(122, 162, 247, 0.75) !important;
       border: none !important;
@@ -229,7 +228,7 @@
       background: rgba(122, 162, 247, 0.25) !important;
     }
 
-    /* Syntax Highlighting leggero per ClawriTeX */
+    /* Syntax Highlighting for ClawriTeX */
     .cm-clawri-cmd { color: var(--blue); font-weight: 500; }
     .cm-clawri-math { color: var(--cyan); }
     .cm-clawri-brace { color: var(--yellow); }
@@ -240,25 +239,25 @@
       flex: 1;
       overflow: hidden;
       padding-top: 6px;
-      background: #000;
+      background: #fafaf9;
     }
 
     #preview-frame {
       width: 100%;
       height: 100%;
       border: none;
-      background: #000;
+      background: transparent;
     }
 
-    /* Autocomplete Popup stile nvim-cmp */
+    /* Autocomplete Popup (nvim-cmp style) */
     .cmp-popup {
       position: fixed;
       z-index: 9999;
       background: var(--bg-float);
       border: 1px solid var(--blue);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65);
-      min-width: 260px;
-      max-width: 380px;
+      min-width: 270px;
+      max-width: 400px;
       max-height: 220px;
       overflow-y: auto;
       display: none;
@@ -306,7 +305,7 @@
       text-overflow: ellipsis;
     }
 
-    /* Statusline inferiore (Lualine LazyVim) */
+    /* Bottom Statusline (Lualine LazyVim) */
     .lualine {
       height: 24px;
       background: var(--bg-float);
@@ -373,7 +372,7 @@
       font-weight: 700;
     }
 
-    /* Finestre Modali Floating LazyVim (Template & Settings) */
+    /* Floating Modals (Template & Settings) */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -602,19 +601,19 @@
   <!-- Top Bar -->
   <div class="lazy-top-bar">
     <div class="lazy-brand">
-      <span class="lazy-brand-badge">CLAWRI v1.0</span>
-      <span>[i] Insert · [Esc] Normal · [s] Settings · [t] Metadati · [Tab] LaTeX</span>
+      <span class="lazy-brand-badge">CLAWRI v1.1</span>
+      <span>[i] Insert · [Cmd+E] Normal · [s] Settings · [t] Metadata · [Tab] LaTeX</span>
     </div>
     <div class="lazy-actions">
-      <button class="lazy-btn" onclick="openMetadataModal()" title="Modifica Titolo, Autore, Data, Tag">[t] Template</button>
-      <button class="lazy-btn" onclick="openSettingsModal()" title="Temi CSS, JS e Comandi Custom">[s] Settings</button>
-      <button class="lazy-btn" onclick="importSourceFile()">Importa .tex</button>
-      <button class="lazy-btn accent" onclick="exportHTML()">Esporta HTML</button>
-      <button class="lazy-btn accent" onclick="exportPDF()">Esporta PDF</button>
+      <button class="lazy-btn" onclick="openMetadataModal()" title="Edit Title, Subtitle, Author, Date, Tag">[t] Template</button>
+      <button class="lazy-btn" onclick="openSettingsModal()" title="CSS Themes, JS & Custom Commands">[s] Settings</button>
+      <button class="lazy-btn" onclick="importSourceFile()">Import .tex</button>
+      <button class="lazy-btn accent" onclick="exportHTML()">Export HTML</button>
+      <button class="lazy-btn accent" onclick="exportPDF()">Export PDF</button>
     </div>
   </div>
 
-  <!-- Split Screen 50% Sinistra / 50% Destra -->
+  <!-- Split Screen 50% Left / 50% Right -->
   <div class="split-workspace">
     <!-- Left Pane: Editor -->
     <div class="pane focused" id="editor-pane" onclick="focusEditor()">
@@ -626,7 +625,7 @@
     <div class="pane" id="preview-pane">
       <div class="pane-title" id="preview-pane-title">preview.html — Live Sync</div>
       <div class="preview-container">
-        <iframe id="preview-frame" title="Anteprima Articolo"></iframe>
+        <iframe id="preview-frame" title="Article Preview"></iframe>
       </div>
     </div>
   </div>
@@ -636,8 +635,8 @@
     <div class="lualine-left">
       <div class="mode-badge" id="mode-badge">NORMAL</div>
       <div class="lua-seg branch"> main*</div>
-      <div class="lua-seg theme-pill" onclick="openSettingsModal()" id="status-theme">🎨 Retro Blog</div>
-      <div class="lua-seg dim" id="status-msg">Pronto — Premi 'i' per scrivere, 's' per Settings</div>
+      <div class="lua-seg theme-pill" onclick="openSettingsModal()" id="status-theme">Clean Minimal</div>
+      <div class="lua-seg dim" id="status-msg">Ready — Press 'i' to write, 'Cmd+E' for Normal, 's' for Settings</div>
     </div>
     <div class="lualine-right">
       <div class="lua-seg dim">UTF-8</div>
@@ -651,165 +650,611 @@
 <div class="cmp-popup" id="cmp-popup">
   <div class="cmp-header">
     <span>LaTeX / Clawri</span>
-    <span>[Tab] Inserisci</span>
+    <span>[Tab] Insert</span>
   </div>
   <div id="cmp-list"></div>
 </div>
 
-<!-- Modal 1: Template Iniziale & Metadati Articolo -->
+<!-- Modal 1: Initial Template & Article Metadata -->
 <div class="modal-backdrop" id="metadata-modal">
   <div class="lazy-modal">
-    <div class="modal-border-title">TEMPLATE ARTICOLO & METADATI</div>
+    <div class="modal-border-title">ARTICLE TEMPLATE & METADATA</div>
     <div class="modal-header">
-      <span style="color: var(--fg-main); font-weight: 700;">Configura Intestazione Pagina</span>
-      <button class="lazy-btn" onclick="closeModals()">[Esc] Chiudi</button>
+      <span style="color: var(--fg-main); font-weight: 700;">Configure Page Header</span>
+      <button class="lazy-btn" onclick="closeModals()">[Cmd+E] Close</button>
     </div>
     <div class="modal-body">
       <div class="form-grid">
         <div class="form-group full">
-          <label>Titolo Articolo (H1 & &lt;title&gt;)</label>
-          <input type="text" class="lazy-input" id="meta-title" placeholder="Es. Riflessioni sul Tempo e sulla Polvere" />
+          <label>Article Title (H1 & &lt;title&gt;)</label>
+          <input type="text" class="lazy-input" id="meta-title" placeholder="e.g. Enigmas of Death" />
+        </div>
+        <div class="form-group full">
+          <label>Subtitle (Optional)</label>
+          <input type="text" class="lazy-input" id="meta-subtitle" placeholder="e.g. Reflections on Time and Dust" />
         </div>
         <div class="form-group">
-          <label>Autore</label>
-          <input type="text" class="lazy-input" id="meta-author" placeholder="Il tuo nome" />
+          <label>Author</label>
+          <input type="text" class="lazy-input" id="meta-author" placeholder="Your name" />
         </div>
         <div class="form-group">
-          <label>Data Pubblicazione (YYYY/MM/DD)</label>
+          <label>Publication Date (YYYY/MM/DD)</label>
           <input type="text" class="lazy-input" id="meta-date" />
         </div>
         <div class="form-group">
-          <label>Tag Categoria (Nav Badge)</label>
-          <input type="text" class="lazy-input" id="meta-tag" placeholder="POETRY / ESSAY / MATH" />
+          <label>Category Tag (Nav Badge)</label>
+          <input type="text" class="lazy-input" id="meta-tag" placeholder="CANTO / POETRY / ESSAY / MATH" />
         </div>
         <div class="form-group">
-          <label>Link Ritorno Blog</label>
+          <label>Blog Back Link</label>
           <input type="text" class="lazy-input" id="meta-backlink" value="/blog.html" />
         </div>
         <div class="form-group full">
-          <label>Descrizione SEO (Meta Description)</label>
-          <input type="text" class="lazy-input" id="meta-desc" placeholder="Breve descrizione per motori di ricerca..." />
+          <label>SEO Description (Meta Description)</label>
+          <input type="text" class="lazy-input" id="meta-desc" placeholder="Short description for search engines..." />
         </div>
         <div class="form-group">
-          <label>Testo Footer Copyright</label>
+          <label>Footer Copyright Text</label>
           <input type="text" class="lazy-input" id="meta-footer" value="2026 — THE END OF TIME" />
         </div>
         <div class="form-group">
-          <label>Lingua HTML</label>
+          <label>HTML Language</label>
           <select class="lazy-select" id="meta-lang">
-            <option value="it" selected>Italiano (it)</option>
-            <option value="en">English (en)</option>
+            <option value="en" selected>English (en)</option>
+            <option value="it">Italian (it)</option>
           </select>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <div class="hint-keys"><kbd>Enter</kbd> Applica al template</div>
+      <div class="hint-keys"><kbd>Cmd+E</kbd> Close</div>
       <div style="display:flex; gap:8px;">
-        <button class="lazy-btn" onclick="loadSampleArticle()">Carica Esempio Completo</button>
-        <button class="lazy-btn accent" onclick="saveMetadata()">Applica & Inizia a Scrivere</button>
+        <button class="lazy-btn" onclick="loadSampleArticle()">Load Full Example</button>
+        <button class="lazy-btn accent" onclick="saveMetadata()">Apply & Start Writing</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Modal 2: Settings Mode (tasto 's') -->
+<!-- Modal 2: Settings Mode ('s' key) -->
 <div class="modal-backdrop" id="settings-modal">
   <div class="lazy-modal settings-modal">
-    <div class="modal-border-title">SETTINGS MODE — STILI, CSS, JS & COMANDI</div>
+    <div class="modal-border-title">SETTINGS MODE — STYLES, CSS, JS & COMMANDS</div>
     <div class="modal-header">
       <div class="modal-tabs">
-        <button class="modal-tab active" data-tab="themes" onclick="switchSettingsTab('themes')">1. Temi & CSS</button>
-        <button class="modal-tab" data-tab="js" onclick="switchSettingsTab('js')">2. JavaScript Esterno</button>
-        <button class="modal-tab" data-tab="commands" onclick="switchSettingsTab('commands')">3. Comandi Custom</button>
-        <button class="modal-tab" data-tab="backup" onclick="switchSettingsTab('backup')">4. Salva / Importa Config</button>
+        <button class="modal-tab active" data-tab="themes" onclick="switchSettingsTab('themes')">1. Themes & CSS</button>
+        <button class="modal-tab" data-tab="js" onclick="switchSettingsTab('js')">2. External JavaScript</button>
+        <button class="modal-tab" data-tab="commands" onclick="switchSettingsTab('commands')">3. Custom Commands</button>
+        <button class="modal-tab" data-tab="backup" onclick="switchSettingsTab('backup')">4. Save / Import Config</button>
       </div>
-      <button class="lazy-btn" onclick="closeModals()">[Esc] Torna all'Editor</button>
+      <button class="lazy-btn" onclick="applyAndCloseSettings()">[Cmd+E] Back to Editor</button>
     </div>
 
     <div class="modal-body">
-      <!-- Tab 1: Temi & CSS -->
+      <!-- Tab 1: Themes & CSS -->
       <div id="tab-themes" class="settings-panel" style="display:flex; flex-direction:column; gap:14px;">
         <div class="theme-cards">
-          <div class="theme-card selected" id="card-retro" onclick="selectTheme('retro')">
-            <h4>1. Retro Blog (Tuo Stile)</h4>
-            <p>Sfondo nero #000, font pixel Press Start 2P / VT323, accenti giallo, ciano e arancio del tuo template originale.</p>
+          <div class="theme-card selected" id="card-clean" onclick="selectTheme('clean')">
+            <h4>1. Clean Minimal (Default)</h4>
+            <p>Based on your page structure, light, minimalist, editorial, and designed for maximum readability.</p>
           </div>
-          <div class="theme-card" id="card-clean" onclick="selectTheme('clean')">
-            <h4>2. Pulito Pulito (Minimal)</h4>
-            <p>Basato sulla struttura della tua pagina, ma minimalista, chiaro, editoriale e ad altissima leggibilità.</p>
+          <div class="theme-card" id="card-retro" onclick="selectTheme('retro')">
+            <h4>2. Retro Dark</h4>
+            <p>Pitch-black #000 background, Press Start 2P / VT323 pixel fonts, yellow, cyan, and orange accents.</p>
           </div>
           <div class="theme-card" id="card-custom" onclick="selectTheme('custom')">
-            <h4>3. CSS Personalizzato</h4>
-            <p>Usa il tuo foglio di stile CSS caricato o modificato qui sotto per controllare ogni dettaglio grafico.</p>
+            <h4>3. Custom CSS</h4>
+            <p>Use your own uploaded or edited CSS stylesheet below for full visual control.</p>
           </div>
         </div>
 
         <div class="form-group">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <label>Foglio di Stile CSS Attivo (Modificabile liberamente)</label>
+            <label>Active CSS Stylesheet (Freely Editable)</label>
             <div style="display:flex; gap:6px;">
-              <button class="lazy-btn" onclick="resetThemeCSS()">Ripristina CSS Predefinito</button>
-              <button class="lazy-btn" onclick="triggerFileUpload('css')">Carica file .css</button>
+              <button class="lazy-btn" onclick="resetThemeCSS()">Reset Default CSS</button>
+              <button class="lazy-btn" onclick="triggerFileUpload('css')">Upload .css file</button>
             </div>
           </div>
           <textarea class="lazy-textarea" id="settings-css-editor" spellcheck="false"></textarea>
         </div>
       </div>
 
-      <!-- Tab 2: JavaScript Separato -->
+      <!-- Tab 2: Separate JavaScript -->
       <div id="tab-js" class="settings-panel" style="display:none; flex-direction:column; gap:12px;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <label style="color:var(--cyan); font-size:11px;">SCRIPT JAVASCRIPT AGGIUNTIVI (Inseriti a parte nell'HTML finale)</label>
-          <button class="lazy-btn" onclick="triggerFileUpload('js')">Carica file .js</button>
+          <label style="color:var(--cyan); font-size:11px;">ADDITIONAL JAVASCRIPT (Injected separately into the exported HTML)</label>
+          <button class="lazy-btn" onclick="triggerFileUpload('js')">Upload .js file</button>
         </div>
         <p style="font-size:11.5px; color:var(--fg-muted);">
-          Nota: MathJax, Highlight.js e lo script per le note a margine/sidenote sono già inclusi automaticamente. Qui puoi aggiungere tuoi script personalizzati.
+          Note: MathJax, Highlight.js, and the responsive margin sidenote script are already included automatically. Add any extra custom scripts here.
         </p>
-        <textarea class="lazy-textarea" id="settings-js-editor" placeholder="// Inserisci qui il tuo codice JavaScript personalizzato..." spellcheck="false"></textarea>
+        <textarea class="lazy-textarea" id="settings-js-editor" placeholder="// Enter your custom JavaScript code here..." spellcheck="false"></textarea>
       </div>
 
-      <!-- Tab 3: Comandi Custom -->
+      <!-- Tab 3: Custom Commands -->
       <div id="tab-commands" class="settings-panel" style="display:none; flex-direction:column; gap:12px;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div>
-            <label style="color:var(--cyan); font-size:11px;">CREA COMANDI STILE LATEX PERSONALIZZATI</label>
+            <label style="color:var(--cyan); font-size:11px;">CREATE CUSTOM LATEX-STYLE COMMANDS</label>
             <p style="font-size:11px; color:var(--fg-muted); margin-top:3px;">
-              Usa <code>{{1}}</code>, <code>{{2}}</code> nel template HTML per inserire gli argomenti tra graffe <code>\comando{arg1}{arg2}</code>.
+              Use <code>{{1}}</code>, <code>{{2}}</code> in the HTML template to inject brace arguments <code>\command{arg1}{arg2}</code>.
             </p>
           </div>
-          <button class="lazy-btn accent" onclick="addCustomCommandRow()">+ Nuovo Comando</button>
+          <button class="lazy-btn accent" onclick="addCustomCommandRow()">+ New Command</button>
         </div>
         <div class="custom-cmd-list" id="custom-cmd-list"></div>
       </div>
 
-      <!-- Tab 4: Salva / Importa -->
+      <!-- Tab 4: Save / Import -->
       <div id="tab-backup" class="settings-panel" style="display:none; flex-direction:column; gap:14px;">
         <p style="font-size:12px; color:var(--fg-main); line-height:1.6;">
-          Tutte le impostazioni (CSS, JavaScript e comandi personalizzati) vengono salvate automaticamente nel browser. Puoi anche esportarle in un file <code>clawri-theme.json</code> per portarle su un altro PC o repository.
+          All settings (CSS, JavaScript, and custom commands) are saved automatically in your browser. You can also export them to a <code>clawri-theme-config.json</code> file to transfer across devices or repositories.
         </p>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="lazy-btn accent" onclick="exportConfigJSON()">Esporta Configurazione (.json)</button>
-          <button class="lazy-btn" onclick="triggerFileUpload('json')">Importa Configurazione (.json)</button>
-          <button class="lazy-btn" style="border-color:var(--red); color:var(--red);" onclick="factoryReset()">Reset Totale Impostazioni</button>
+          <button class="lazy-btn accent" onclick="exportConfigJSON()">Export Configuration (.json)</button>
+          <button class="lazy-btn" onclick="triggerFileUpload('json')">Import Configuration (.json)</button>
+          <button class="lazy-btn" style="border-color:var(--red); color:var(--red);" onclick="factoryReset()">Reset All Settings</button>
         </div>
       </div>
     </div>
 
     <div class="modal-footer">
-      <div class="hint-keys"><kbd>Esc</kbd> Salva & Chiudi</div>
-      <button class="lazy-btn accent" onclick="applyAndCloseSettings()">Salva & Applica Stile</button>
+      <div class="hint-keys"><kbd>Cmd+E</kbd> Save & Close</div>
+      <button class="lazy-btn accent" onclick="applyAndCloseSettings()">Save & Apply Style</button>
     </div>
   </div>
 </div>
 
-<!-- Input file nascosti per upload CSS / JS / JSON / TEX -->
+<!-- Hidden file inputs for CSS / JS / JSON / TEX uploads -->
 <input type="file" id="hidden-file-input" style="display:none;" />
 
 <script>
 /* ============================================================================
-   1. TEMI PREDEFINITI (1: Tuo Template Retro, 2: Pulito Pulito Minimal)
+   1. BUILT-IN THEMES (1: Clean Minimal Default, 2: Retro Dark)
    ============================================================================ */
+const THEME_CLEAN_CSS = `:root {
+    --bg: #fafaf9;
+    --surface: #ffffff;
+    --ink: #18181b;
+    --ink-muted: #52525b;
+    --ink-subtle: #a1a1aa;
+    --accent: #0f172a;
+    --border: #e4e4e7;
+    --border-strong: #18181b;
+
+    --font-serif: Georgia, 'Times New Roman', serif;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-code: 'Fira Code', monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: 19px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+.article-wrapper {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    position: relative;
+}
+
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-sans);
+}
+
+.back-home {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.back-home:hover { color: var(--ink); }
+
+.nav-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    background: #f4f4f5;
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 3px;
+}
+
+.article-header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 8px;
+    text-align: center;
+}
+
+.post-title {
+    font-family: var(--font-sans);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+}
+
+.subtitle {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    color: var(--ink-muted);
+    font-style: italic;
+    margin-top: -4px;
+}
+
+.post-meta {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--ink-muted);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.abstract-box {
+    border-left: 3px solid var(--border-strong);
+    background-color: var(--surface);
+    padding: 18px 22px;
+    margin: 8px 0 16px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    text-align: left;
+}
+
+.abstract-label {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.abstract-text {
+    font-style: italic;
+    margin: 0;
+    color: var(--ink);
+    font-size: 17px;
+}
+
+.article-content {
+    font-size: 19px;
+    color: var(--ink);
+    position: relative;
+}
+
+.article-content h2 {
+    font-family: var(--font-sans);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ink);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    margin-top: 42px;
+    margin-bottom: 16px;
+}
+
+.article-content h3 {
+    font-family: var(--font-sans);
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: 30px;
+    margin-bottom: 12px;
+}
+
+.article-content p { margin-bottom: 22px; }
+
+.article-content a {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+}
+
+blockquote.quote-box {
+    margin: 30px 0;
+    padding: 18px 24px;
+    background-color: var(--surface);
+    border-left: 3px solid var(--ink-muted);
+    color: var(--ink);
+}
+
+blockquote.quote-box p {
+    margin: 0 0 8px 0;
+    font-style: italic;
+    font-size: 18px;
+}
+
+blockquote.quote-box cite {
+    display: block;
+    font-style: normal;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    text-align: right;
+}
+
+/* --- CANTO / POEM (\poem{}) --- */
+.canto-container {
+    counter-reset: verse-num;
+    margin: 36px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.stanza {
+    margin-bottom: 32px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.stanza:last-of-type {
+    margin-bottom: 0;
+}
+
+.verse {
+    counter-increment: verse-num;
+    position: relative;
+    text-align: center;
+    font-size: 19px;
+    line-height: 1.85;
+    color: var(--ink);
+    font-style: italic;
+    padding: 0 45px;
+    margin-bottom: 4px;
+}
+
+.verse::before {
+    content: counter(verse-num);
+    position: absolute;
+    left: 10px;
+    top: 0;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--ink-subtle);
+    font-style: normal;
+    opacity: 0.75;
+    user-select: none;
+}
+
+.poem-attribution {
+    margin-top: 18px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--ink-muted);
+    text-align: center;
+}
+
+/* --- BOXED POETRY (\poetry{}) --- */
+figure.poem-box {
+    margin: 34px 0;
+    padding: 24px 28px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.poem-content {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    line-height: 1.9;
+    color: var(--ink);
+    font-style: italic;
+}
+
+.verse-line {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+}
+
+.verse-num {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    color: var(--ink-subtle);
+    min-width: 22px;
+    text-align: right;
+    font-style: normal;
+}
+
+.verse-divider {
+    color: var(--ink-subtle);
+    margin: 8px 0 8px 38px;
+    font-style: normal;
+}
+
+.poem-meta {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--ink-muted);
+    text-align: right;
+    margin: 0;
+}
+
+sup.fn-ref {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 2px;
+    font-style: normal;
+}
+
+sup.fn-ref a {
+    color: var(--ink);
+    text-decoration: none;
+}
+
+figure.article-image {
+    margin: 32px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+figure.article-image img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+}
+
+figcaption {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-top: 10px;
+}
+
+pre {
+    background-color: #18181b !important;
+    color: #f4f4f5;
+    border-radius: 4px;
+    padding: 16px;
+    overflow-x: auto;
+    margin: 24px 0;
+}
+
+code { font-family: var(--font-code) !important; font-size: 14px !important; }
+
+.section-title-box {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+    margin-top: 44px;
+    margin-bottom: 16px;
+}
+
+.footnotes { font-size: 15px; color: var(--ink-muted); }
+.footnotes ol { padding-left: 20px; }
+.footnotes li { margin-bottom: 8px; }
+.fn-backlink { font-family: var(--font-sans); font-size: 11px; color: var(--ink); text-decoration: none; margin-left: 6px; }
+
+.fn-overlay {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--surface);
+    border-top: 2px solid var(--border-strong);
+    padding: 16px;
+    z-index: 9999;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+}
+
+.fn-overlay-content { max-width: 720px; margin: 0 auto; }
+.fn-overlay-header {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+.fn-overlay-close {
+    background: none;
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+@media (min-width: 1280px) {
+    .sidenote-desktop {
+        position: absolute;
+        right: -260px;
+        width: 230px;
+        font-family: var(--font-sans);
+        font-size: 13px;
+        line-height: 1.45;
+        color: var(--ink-muted);
+        border-left: 2px solid var(--border);
+        padding: 4px 12px;
+        text-align: left;
+        font-style: normal;
+        z-index: 10;
+    }
+    .sidenote-num {
+        font-weight: 700;
+        font-size: 11px;
+        color: var(--ink);
+        display: block;
+        margin-bottom: 2px;
+    }
+}
+
+.article-footer {
+    margin-top: 48px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--ink-muted);
+}
+
+.article-footer a { color: var(--ink); text-decoration: none; }
+
+@media (max-width: 600px) {
+    .post-title { font-size: 28px; }
+    .verse { font-size: 17px; padding: 0 28px; }
+    .verse::before { left: 0; }
+}
+
+@media print {
+    body { background: #fff; padding: 0; }
+    .top-nav, .fn-overlay { display: none !important; }
+}`;
+
 const THEME_RETRO_CSS = `@font-face {
     font-family: 'Century Gothic';
     src: url('/fonts/century-gothic.woff2') format('woff2');
@@ -905,6 +1350,7 @@ body {
     flex-direction: column;
     gap: 12px;
     padding-top: 8px;
+    text-align: center;
 }
 
 .post-title {
@@ -917,11 +1363,19 @@ body {
     letter-spacing: -0.5px;
 }
 
+.subtitle {
+    font-size: 18px;
+    color: var(--ut-cyan);
+    font-style: italic;
+    margin-top: -4px;
+}
+
 .post-meta {
     font-family: var(--font-ui);
     font-size: 10px;
     color: var(--ut-gray);
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 16px;
     flex-wrap: wrap;
@@ -935,6 +1389,7 @@ body {
     padding: 18px 22px;
     margin: 12px 0 20px 0;
     position: relative;
+    text-align: left;
 }
 
 .abstract-label {
@@ -1023,7 +1478,60 @@ blockquote.quote-box cite span.quote-source {
     color: var(--ut-gray);
 }
 
-/* --- STILI POESIE E VERSI NUMERATI --- */
+/* --- CANTO / POEM (\poem{}) --- */
+.canto-container {
+    counter-reset: verse-num;
+    margin: 36px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.stanza {
+    margin-bottom: 32px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.stanza:last-of-type {
+    margin-bottom: 0;
+}
+
+.verse {
+    counter-increment: verse-num;
+    position: relative;
+    text-align: center;
+    font-size: 19px;
+    line-height: 1.85;
+    color: var(--ut-white);
+    font-style: italic;
+    padding: 0 45px;
+    margin-bottom: 4px;
+}
+
+.verse::before {
+    content: counter(verse-num);
+    position: absolute;
+    left: 10px;
+    top: 0;
+    font-family: var(--font-ui);
+    font-size: 9px;
+    color: var(--ut-gray);
+    font-style: normal;
+    opacity: 0.6;
+    user-select: none;
+}
+
+.poem-attribution {
+    margin-top: 18px;
+    font-family: var(--font-ui);
+    font-size: 10px;
+    color: var(--ut-yellow);
+    text-align: center;
+}
+
+/* --- BOXED POETRY (\poetry{}) --- */
 figure.poem-box {
     margin: 32px 0;
     padding: 22px 26px;
@@ -1086,6 +1594,7 @@ sup.fn-ref {
     font-size: 10px;
     vertical-align: super;
     margin-left: 2px;
+    font-style: normal;
 }
 
 sup.fn-ref a {
@@ -1216,6 +1725,9 @@ p code, li code {
         border-left: 2px solid var(--ut-yellow);
         background-color: var(--ut-dark-box);
         padding: 8px 10px;
+        text-align: left;
+        font-style: normal;
+        z-index: 10;
     }
     .sidenote-num {
         font-family: var(--font-ui);
@@ -1239,408 +1751,45 @@ p code, li code {
 }
 
 .article-footer a { color: var(--ut-cyan); text-decoration: none; }
-.article-footer a:hover { color: var(--ut-yellow); }`;
+.article-footer a:hover { color: var(--ut-yellow); }
 
-const THEME_CLEAN_CSS = `:root {
-    --bg: #fafaf9;
-    --surface: #ffffff;
-    --ink: #18181b;
-    --ink-muted: #52525b;
-    --ink-subtle: #a1a1aa;
-    --accent: #0f172a;
-    --border: #e4e4e7;
-    --border-strong: #18181b;
-
-    --font-serif: Georgia, 'Times New Roman', serif;
-    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-code: 'Fira Code', monospace;
-}
-
-* { box-sizing: border-box; }
-
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    background-color: var(--bg);
-    color: var(--ink);
-    font-family: var(--font-serif);
-    font-size: 19px;
-    line-height: 1.75;
-    -webkit-font-smoothing: antialiased;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    padding: 40px 20px;
-}
-
-.article-wrapper {
-    width: 100%;
-    max-width: 720px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
-    position: relative;
-}
-
-.top-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-    font-family: var(--font-sans);
-}
-
-.back-home {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    color: var(--ink-muted);
-    text-decoration: none;
-    text-transform: uppercase;
-}
-
-.back-home:hover { color: var(--ink); }
-
-.nav-tag {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: var(--ink);
-    background: #f4f4f5;
-    border: 1px solid var(--border);
-    padding: 3px 10px;
-    border-radius: 3px;
-}
-
-.article-header {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding-top: 8px;
-}
-
-.post-title {
-    font-family: var(--font-sans);
-    font-size: 36px;
-    font-weight: 700;
-    color: var(--ink);
-    margin: 0;
-    line-height: 1.2;
-    letter-spacing: -0.025em;
-}
-
-.post-meta {
-    font-family: var(--font-sans);
-    font-size: 13px;
-    color: var(--ink-muted);
-    display: flex;
-    align-items: center;
-    gap: 18px;
-}
-
-.abstract-box {
-    border-left: 3px solid var(--border-strong);
-    background-color: var(--surface);
-    padding: 18px 22px;
-    margin: 8px 0 16px 0;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-}
-
-.abstract-label {
-    font-family: var(--font-sans);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--ink-muted);
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 6px;
-}
-
-.abstract-text {
-    font-style: italic;
-    margin: 0;
-    color: var(--ink);
-    font-size: 17px;
-}
-
-.article-content {
-    font-size: 19px;
-    color: var(--ink);
-    position: relative;
-}
-
-.article-content h2 {
-    font-family: var(--font-sans);
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--ink);
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 8px;
-    margin-top: 42px;
-    margin-bottom: 16px;
-}
-
-.article-content h3 {
-    font-family: var(--font-sans);
-    font-size: 19px;
-    font-weight: 600;
-    color: var(--ink);
-    margin-top: 30px;
-    margin-bottom: 12px;
-}
-
-.article-content p { margin-bottom: 22px; }
-
-.article-content a {
-    color: var(--ink);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 4px;
-}
-
-blockquote.quote-box {
-    margin: 30px 0;
-    padding: 18px 24px;
-    background-color: var(--surface);
-    border-left: 3px solid var(--ink-muted);
-    color: var(--ink);
-}
-
-blockquote.quote-box p {
-    margin: 0 0 8px 0;
-    font-style: italic;
-    font-size: 18px;
-}
-
-blockquote.quote-box cite {
-    display: block;
-    font-style: normal;
-    font-family: var(--font-sans);
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--ink-muted);
-    text-align: right;
-}
-
-figure.poem-box {
-    margin: 34px 0;
-    padding: 24px 28px;
-    background-color: var(--surface);
-    border: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.poem-content {
-    font-family: var(--font-serif);
-    font-size: 18px;
-    line-height: 1.9;
-    color: var(--ink);
-    font-style: italic;
-}
-
-.verse-line {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-}
-
-.verse-num {
-    font-family: var(--font-sans);
-    font-size: 11px;
-    color: var(--ink-subtle);
-    min-width: 22px;
-    text-align: right;
-    font-style: normal;
-}
-
-.verse-divider {
-    color: var(--ink-subtle);
-    margin: 8px 0 8px 38px;
-    font-style: normal;
-}
-
-.poem-meta {
-    font-family: var(--font-sans);
-    font-size: 12px;
-    color: var(--ink-muted);
-    text-align: right;
-    margin: 0;
-}
-
-sup.fn-ref {
-    font-family: var(--font-sans);
-    font-size: 11px;
-    font-weight: 600;
-    margin-left: 2px;
-}
-
-sup.fn-ref a {
-    color: var(--ink);
-    text-decoration: none;
-}
-
-figure.article-image {
-    margin: 32px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-figure.article-image img {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid var(--border);
-}
-
-figcaption {
-    font-family: var(--font-sans);
-    font-size: 13px;
-    color: var(--ink-muted);
-    margin-top: 10px;
-}
-
-pre {
-    background-color: #18181b !important;
-    color: #f4f4f5;
-    border-radius: 4px;
-    padding: 16px;
-    overflow-x: auto;
-    margin: 24px 0;
-}
-
-code { font-family: var(--font-code) !important; font-size: 14px !important; }
-
-.section-title-box {
-    font-family: var(--font-sans);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--ink-muted);
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 8px;
-    margin-top: 44px;
-    margin-bottom: 16px;
-}
-
-.footnotes { font-size: 15px; color: var(--ink-muted); }
-.footnotes ol { padding-left: 20px; }
-.footnotes li { margin-bottom: 8px; }
-.fn-backlink { font-family: var(--font-sans); font-size: 11px; color: var(--ink); text-decoration: none; margin-left: 6px; }
-
-.fn-overlay {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: var(--surface);
-    border-top: 2px solid var(--border-strong);
-    padding: 16px;
-    z-index: 9999;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
-}
-
-.fn-overlay-content { max-width: 720px; margin: 0 auto; }
-.fn-overlay-header {
-    display: flex;
-    justify-content: space-between;
-    font-family: var(--font-sans);
-    font-size: 11px;
-    font-weight: 700;
-    margin-bottom: 8px;
-}
-.fn-overlay-close {
-    background: none;
-    border: 1px solid var(--border);
-    padding: 3px 8px;
-    cursor: pointer;
-    font-size: 11px;
-}
-
-@media (min-width: 1280px) {
-    .sidenote-desktop {
-        position: absolute;
-        right: -260px;
-        width: 230px;
-        font-family: var(--font-sans);
-        font-size: 13px;
-        line-height: 1.45;
-        color: var(--ink-muted);
-        border-left: 2px solid var(--border);
-        padding: 4px 12px;
-    }
-    .sidenote-num {
-        font-weight: 700;
-        font-size: 11px;
-        color: var(--ink);
-        display: block;
-        margin-bottom: 2px;
-    }
-}
-
-.article-footer {
-    margin-top: 48px;
-    padding-top: 18px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    font-family: var(--font-sans);
-    font-size: 12px;
-    color: var(--ink-muted);
-}
-
-.article-footer a { color: var(--ink); text-decoration: none; }
-
-@media print {
-    body { background: #fff; padding: 0; }
-    .top-nav, .fn-overlay { display: none !important; }
+@media (max-width: 600px) {
+    .post-title { font-size: 26px; }
+    .verse { font-size: 17px; padding: 0 28px; }
+    .verse::before { left: 0; }
 }`;
 
 /* ============================================================================
-   2. STATO APPLICAZIONE & PERSISTENZA
+   2. APPLICATION STATE & PERSISTENCE
    ============================================================================ */
-const DEFAULT_SAMPLE_SOURCE = `\\abstract{Un esempio rapido di Clawri: scrivi a sinistra con scorciatoie Vim e comandi LaTeX, osserva il risultato a destra in tempo reale.}
+const DEFAULT_SAMPLE_SOURCE = `\\abstract{A quick example of Clawri: write on the left with Vim keybindings and LaTeX-style commands, and see the live result on the right.}
 
-\\section{Introduzione alla Fisica e alla Poesia}
+\\section{Centered Stanza Poem}
 
-Possiamo scrivere formule matematiche inline come $E = mc^2$ oppure $\\nabla \\cdot \\mathbf{E} = \\frac{\\rho}{\\varepsilon_0}$ usando il tasto \\textbf{Tab} per l'autocompletamento.
+The \\code{\\poem} command renders centered stanzas with automatic verse numbering and inline footnotes\\footnote{Footnotes are numbered automatically, displayed as margin sidenotes on wide desktop screens, and opened in a bottom drawer on mobile.}:
 
-Per le equazioni centrato-pagina usiamo i doppi dollari:
+\\poem{
+Damna tamen celeres reparant caelestia lunae:
+Nos, ubi decidimus\\footnote{Horace, Odes, Book IV, 7.}
+Quo pius Aeneas, quo dives Tullus et Ancus,
+Pulvis et umbra sumus.
+
+When once we sink where good Aeneas went,
+Where wealthy Tullus and where Ancus are,
+We are but dust and shadow.
+}
+
+\\section{Mathematics & Equations}
+
+Write inline formulas such as $E = mc^2$ or $\\nabla \\cdot \\mathbf{E} = \\frac{\\rho}{\\varepsilon_0}$ using \\textbf{Tab} for autocompletion.
+
+For display equations, use double dollar signs:
 
 $$\\int_{-\\infty}^{\\infty} e^{-x^2}\\,dx = \\sqrt{\\pi}$$
 
-Ecco una citazione classica con nota a piè di pagina\\footnote{Le note vengono numerate automaticamente, posizionate a lato su schermi desktop e apribili in overlay su mobile.}:
+\\quote[Horace][Odes, IV, 7]{Pulvis et umbra sumus — We are merely dust and shadow.}
 
-\\quote[Orazio][Odi, IV, 7]{Pulvis et umbra sumus — Siamo soltanto polvere e ombra.}
-
-\\section{Blocchi Poetici Numerati}
-
-Il comando \\code{\\poetry} numera automaticamente ogni verso e riconosce i separatori di strofa:
-
-\\poetry[Orazio][Liber IV, 7]{
-Damna tamen celeres reparant caelestia lunae:
-Nos, ubi decidimus
-Quo pius Aeneas, quo dives Tullus et Ancus,
-Pulvis et umbra sumus.
----
-Le fasi lunari riempiono i vuoti del cielo,
-Ma noi, una volta inghiottiti
-Dal buio che avvolge il pio Enea ed il prospero Tullo
-Ed Anco, saremo ombra e polvere.
-}
-
-\\section{Codice Sorgente}
+\\section{Source Code}
 
 \\code[python]{
 def euler_identity():
@@ -1652,22 +1801,23 @@ def euler_identity():
 
 const DEFAULT_STATE = {
   meta: {
-    title: "Pulvis et Umbra — Note sul Tempo",
+    title: "Enigmas of Death",
+    subtitle: "Reflections on Time, Verse, and Shadow",
     author: "Author Name",
     date: new Date().toISOString().slice(0, 10).replace(/-/g, '/'),
-    tag: "POETRY",
+    tag: "CANTO",
     backlink: "/blog.html",
-    desc: "Articolo scritto con Clawri",
+    desc: "Article written with Clawri",
     footer: "2026 — THE END OF TIME",
-    lang: "it"
+    lang: "en"
   },
-  activeTheme: "retro", // 'retro' | 'clean' | 'custom'
+  activeTheme: "clean", // 'clean' | 'retro' | 'custom'
   cssByTheme: {
-    retro: THEME_RETRO_CSS,
     clean: THEME_CLEAN_CSS,
+    retro: THEME_RETRO_CSS,
     custom: THEME_CLEAN_CSS
   },
-  customJS: "// Esempio: console.log('Articolo caricato');",
+  customJS: "// Example: console.log('Article loaded');",
   customCommands: [
     { name: "\\highlight", args: 1, template: '<span style="border-bottom: 2px solid currentColor; padding: 0 3px;">{{1}}</span>' }
   ],
@@ -1682,7 +1832,7 @@ let renderTimer = null;
 
 function loadState() {
   try {
-    const saved = localStorage.getItem("clawri_state_v1");
+    const saved = localStorage.getItem("clawri_state_v2");
     if (saved) {
       const parsed = JSON.parse(saved);
       return {
@@ -1693,88 +1843,90 @@ function loadState() {
       };
     }
   } catch (e) {
-    console.warn("Errore caricamento localStorage:", e);
+    console.warn("Error loading localStorage:", e);
   }
   return JSON.parse(JSON.stringify(DEFAULT_STATE));
 }
 
 function saveState() {
   try {
-    localStorage.setItem("clawri_state_v1", JSON.stringify(appState));
+    localStorage.setItem("clawri_state_v2", JSON.stringify(appState));
   } catch (e) {
-    console.warn("Errore salvataggio localStorage:", e);
+    console.warn("Error saving localStorage:", e);
   }
 }
 
 /* ============================================================================
-   3. DIZIONARIO AUTOCOMPLETE LATEX + CLAWRI (Tasto TAB)
+   3. LATEX + CLAWRI AUTOCOMPLETE DICTIONARY (Tab Key)
    ============================================================================ */
 const BASE_COMPLETIONS = [
-  // Comandi Clawri Strutturali
-  { cmd: "\\section{}", insert: "\\section{$1}", desc: "Titolo sezione (H2)" },
-  { cmd: "\\subsection{}", insert: "\\subsection{$1}", desc: "Sottosezione (H3)" },
-  { cmd: "\\abstract{}", insert: "\\abstract{$1}", desc: "Box Note dell'Autore" },
-  { cmd: "\\poetry[][]{}", insert: "\\poetry[$1][]{}", desc: "Poesia con versi numerati" },
-  { cmd: "\\quote[][]{}", insert: "\\quote[$1][]{}", desc: "Citazione con autore/fonte" },
-  { cmd: "\\footnote{}", insert: "\\footnote{$1}", desc: "Nota a piè di pagina / Sidenote" },
-  { cmd: "\\copyright", insert: "\\copyright", desc: "Box Licenza CC BY-NC-ND 4.0" },
-  { cmd: "\\code[]{}", insert: "\\code[python]{\n$1\n}", desc: "Blocco codice evidenziato" },
-  { cmd: "\\image[]{}", insert: "\\image[$1]{https://}", desc: "Immagine con didascalia" },
-  { cmd: "\\link{}{}", insert: "\\link{https://$1}{testo}", desc: "Collegamento ipertestuale" },
-  { cmd: "\\textbf{}", insert: "\\textbf{$1}", desc: "Grassetto" },
-  { cmd: "\\textit{}", insert: "\\textit{$1}", desc: "Corsivo" },
-  { cmd: "\\underline{}", insert: "\\underline{$1}", desc: "Sottolineato" },
-  // Comandi LaTeX Matematici
-  { cmd: "\\frac{}{}", insert: "\\frac{$1}{}", desc: "Frazione" },
-  { cmd: "\\sqrt{}", insert: "\\sqrt{$1}", desc: "Radice quadrata" },
-  { cmd: "\\sum_{}^{}", insert: "\\sum_{$1}^{}", desc: "Sommatoria" },
-  { cmd: "\\int_{}^{}", insert: "\\int_{$1}^{}", desc: "Integrale definito" },
-  { cmd: "\\lim_{}", insert: "\\lim_{$1 \\to \\infty}", desc: "Limite" },
-  { cmd: "\\partial", insert: "\\partial", desc: "Derivata parziale ∂" },
-  { cmd: "\\nabla", insert: "\\nabla", desc: "Operatore Nabla ∇" },
-  { cmd: "\\infty", insert: "\\infty", desc: "Infinito ∞" },
-  { cmd: "\\alpha", insert: "\\alpha", desc: "Lettera greca α" },
-  { cmd: "\\beta", insert: "\\beta", desc: "Lettera greca β" },
-  { cmd: "\\gamma", insert: "\\gamma", desc: "Lettera greca γ" },
-  { cmd: "\\delta", insert: "\\delta", desc: "Lettera greca δ" },
-  { cmd: "\\Delta", insert: "\\Delta", desc: "Delta maiuscola Δ" },
+  // Structural Clawri Commands
+  { cmd: "\\poem{}", insert: "\\poem{\n$1\n}", desc: "Centered poem with stanzas & verse numbers" },
+  { cmd: "\\poetry[][]{}", insert: "\\poetry[$1][]{}", desc: "Boxed poem with attribution" },
+  { cmd: "\\section{}", insert: "\\section{$1}", desc: "Section heading (H2)" },
+  { cmd: "\\subsection{}", insert: "\\subsection{$1}", desc: "Subsection heading (H3)" },
+  { cmd: "\\subtitle{}", insert: "\\subtitle{$1}", desc: "Article subtitle" },
+  { cmd: "\\abstract{}", insert: "\\abstract{$1}", desc: "Author's notes box" },
+  { cmd: "\\quote[][]{}", insert: "\\quote[$1][]{}", desc: "Blockquote with author/source" },
+  { cmd: "\\footnote{}", insert: "\\footnote{$1}", desc: "Footnote / margin sidenote" },
+  { cmd: "\\copyright", insert: "\\copyright", desc: "CC BY-NC-ND 4.0 license box" },
+  { cmd: "\\code[]{}", insert: "\\code[python]{\n$1\n}", desc: "Syntax-highlighted code block" },
+  { cmd: "\\image[]{}", insert: "\\image[$1]{https://}", desc: "Figure with caption" },
+  { cmd: "\\link{}{}", insert: "\\link{https://$1}{text}", desc: "Hyperlink" },
+  { cmd: "\\textbf{}", insert: "\\textbf{$1}", desc: "Bold text" },
+  { cmd: "\\textit{}", insert: "\\textit{$1}", desc: "Italic text" },
+  { cmd: "\\underline{}", insert: "\\underline{$1}", desc: "Underlined text" },
+  // Mathematical LaTeX Commands
+  { cmd: "\\frac{}{}", insert: "\\frac{$1}{}", desc: "Fraction" },
+  { cmd: "\\sqrt{}", insert: "\\sqrt{$1}", desc: "Square root" },
+  { cmd: "\\sum_{}^{}", insert: "\\sum_{$1}^{}", desc: "Summation" },
+  { cmd: "\\int_{}^{}", insert: "\\int_{$1}^{}", desc: "Definite integral" },
+  { cmd: "\\lim_{}", insert: "\\lim_{$1 \\to \\infty}", desc: "Limit" },
+  { cmd: "\\partial", insert: "\\partial", desc: "Partial derivative ∂" },
+  { cmd: "\\nabla", insert: "\\nabla", desc: "Nabla operator ∇" },
+  { cmd: "\\infty", insert: "\\infty", desc: "Infinity ∞" },
+  { cmd: "\\alpha", insert: "\\alpha", desc: "Greek letter α" },
+  { cmd: "\\beta", insert: "\\beta", desc: "Greek letter β" },
+  { cmd: "\\gamma", insert: "\\gamma", desc: "Greek letter γ" },
+  { cmd: "\\delta", insert: "\\delta", desc: "Greek letter δ" },
+  { cmd: "\\Delta", insert: "\\Delta", desc: "Uppercase Delta Δ" },
   { cmd: "\\varepsilon", insert: "\\varepsilon", desc: "Epsilon ε" },
   { cmd: "\\theta", insert: "\\theta", desc: "Theta θ" },
   { cmd: "\\lambda", insert: "\\lambda", desc: "Lambda λ" },
   { cmd: "\\mu", insert: "\\mu", desc: "Mu μ" },
-  { cmd: "\\pi", insert: "\\pi", desc: "Pi greco π" },
+  { cmd: "\\pi", insert: "\\pi", desc: "Pi π" },
   { cmd: "\\rho", insert: "\\rho", desc: "Rho ρ" },
   { cmd: "\\sigma", insert: "\\sigma", desc: "Sigma σ" },
   { cmd: "\\phi", insert: "\\phi", desc: "Phi φ" },
   { cmd: "\\omega", insert: "\\omega", desc: "Omega ω" },
-  { cmd: "\\Omega", insert: "\\Omega", desc: "Omega maiuscola Ω" },
-  { cmd: "\\mathbb{}", insert: "\\mathbb{$1}", desc: "Insieme (R, N, Z, C)" },
-  { cmd: "\\mathcal{}", insert: "\\mathcal{$1}", desc: "Calligrafico" },
-  { cmd: "\\mathbf{}", insert: "\\mathbf{$1}", desc: "Vettore / Grassetto math" },
-  { cmd: "\\vec{}", insert: "\\vec{$1}", desc: "Freccia vettore" },
-  { cmd: "\\hat{}", insert: "\\hat{$1}", desc: "Versore / Cappello" },
-  { cmd: "\\cdot", insert: "\\cdot", desc: "Prodotto scalare ·" },
-  { cmd: "\\times", insert: "\\times", desc: "Prodotto vettoriale ×" },
-  { cmd: "\\leq", insert: "\\leq", desc: "Minore o uguale ≤" },
-  { cmd: "\\geq", insert: "\\geq", desc: "Maggiore o uguale ≥" },
-  { cmd: "\\neq", insert: "\\neq", desc: "Diverso ≠" },
-  { cmd: "\\approx", insert: "\\approx", desc: "Circa uguale ≈" },
-  { cmd: "\\equiv", insert: "\\equiv", desc: "Equivalente ≡" },
-  { cmd: "\\in", insert: "\\in", desc: "Appartiene ∈" },
-  { cmd: "\\subset", insert: "\\subset", desc: "Sottoinsieme ⊂" },
-  { cmd: "\\cup", insert: "\\cup", desc: "Unione ∪" },
-  { cmd: "\\cap", insert: "\\cap", desc: "Intersezione ∩" },
-  { cmd: "\\to", insert: "\\to", desc: "Freccia →" },
-  { cmd: "\\Rightarrow", insert: "\\Rightarrow", desc: "Implica ⇒" },
-  { cmd: "\\Leftrightarrow", insert: "\\Leftrightarrow", desc: "Se e solo se ⇔" },
-  { cmd: "\\sin", insert: "\\sin", desc: "Seno" },
-  { cmd: "\\cos", insert: "\\cos", desc: "Coseno" },
-  { cmd: "\\tan", insert: "\\tan", desc: "Tangente" },
-  { cmd: "\\ln", insert: "\\ln", desc: "Logaritmo naturale" },
-  { cmd: "\\log", insert: "\\log", desc: "Logaritmo" },
-  { cmd: "\\exp", insert: "\\exp", desc: "Esponenziale" },
-  { cmd: "\\begin{cases}", insert: "\\begin{cases}\n$1 & \\text{se } \\\\\n & \\text{altrimenti}\n\\end{cases}", desc: "Sistema a tratti" },
-  { cmd: "\\begin{pmatrix}", insert: "\\begin{pmatrix}\n$1 & \\\\\n & \n\\end{pmatrix}", desc: "Matrice con parentesi" }
+  { cmd: "\\Omega", insert: "\\Omega", desc: "Uppercase Omega Ω" },
+  { cmd: "\\mathbb{}", insert: "\\mathbb{$1}", desc: "Blackboard bold (R, N, Z, C)" },
+  { cmd: "\\mathcal{}", insert: "\\mathcal{$1}", desc: "Calligraphic font" },
+  { cmd: "\\mathbf{}", insert: "\\mathbf{$1}", desc: "Bold vector" },
+  { cmd: "\\vec{}", insert: "\\vec{$1}", desc: "Vector arrow" },
+  { cmd: "\\hat{}", insert: "\\hat{$1}", desc: "Unit vector hat" },
+  { cmd: "\\cdot", insert: "\\cdot", desc: "Dot product ·" },
+  { cmd: "\\times", insert: "\\times", desc: "Cross product ×" },
+  { cmd: "\\leq", insert: "\\leq", desc: "Less than or equal ≤" },
+  { cmd: "\\geq", insert: "\\geq", desc: "Greater than or equal ≥" },
+  { cmd: "\\neq", insert: "\\neq", desc: "Not equal ≠" },
+  { cmd: "\\approx", insert: "\\approx", desc: "Approximately equal ≈" },
+  { cmd: "\\equiv", insert: "\\equiv", desc: "Equivalent ≡" },
+  { cmd: "\\in", insert: "\\in", desc: "Element of ∈" },
+  { cmd: "\\subset", insert: "\\subset", desc: "Subset ⊂" },
+  { cmd: "\\cup", insert: "\\cup", desc: "Union ∪" },
+  { cmd: "\\cap", insert: "\\cap", desc: "Intersection ∩" },
+  { cmd: "\\to", insert: "\\to", desc: "Right arrow →" },
+  { cmd: "\\Rightarrow", insert: "\\Rightarrow", desc: "Implies ⇒" },
+  { cmd: "\\Leftrightarrow", insert: "\\Leftrightarrow", desc: "If and only if ⇔" },
+  { cmd: "\\sin", insert: "\\sin", desc: "Sine" },
+  { cmd: "\\cos", insert: "\\cos", desc: "Cosine" },
+  { cmd: "\\tan", insert: "\\tan", desc: "Tangent" },
+  { cmd: "\\ln", insert: "\\ln", desc: "Natural logarithm" },
+  { cmd: "\\log", insert: "\\log", desc: "Logarithm" },
+  { cmd: "\\exp", insert: "\\exp", desc: "Exponential" },
+  { cmd: "\\begin{cases}", insert: "\\begin{cases}\n$1 & \\text{if } \\\\\n & \\text{otherwise}\n\\end{cases}", desc: "Piecewise cases" },
+  { cmd: "\\begin{pmatrix}", insert: "\\begin{pmatrix}\n$1 & \\\\\n & \n\\end{pmatrix}", desc: "Parenthesized matrix" }
 ];
 
 let cmpMatches = [];
@@ -1789,7 +1941,7 @@ function getAllCompletions() {
       return {
         cmd: c.name + braces,
         insert: c.name + (braces || "$1"),
-        desc: "Comando personalizzato"
+        desc: "Custom command"
       };
     });
   return [...custom, ...BASE_COMPLETIONS];
@@ -1872,7 +2024,7 @@ function acceptAutocomplete(idx = cmpIndex) {
 }
 
 /* ============================================================================
-   4. COMPILATORE CLAWRI-TEX -> HTML (Con bilanciamento graffe & mappe riga)
+   4. CLAWRI-TEX -> HTML COMPILER
    ============================================================================ */
 function escapeHtml(str) {
   return String(str)
@@ -1882,7 +2034,6 @@ function escapeHtml(str) {
     .replace(/"/g, "&quot;");
 }
 
-// Estrae blocchi bilanciati [...] o {...} partendo da pos
 function readBalanced(str, pos, openChar, closeChar) {
   if (str[pos] !== openChar) return null;
   let depth = 0;
@@ -1911,17 +2062,15 @@ function compileClawriDocument(rawSource) {
   const mathTokens = [];
   const footnotes = [];
   let hasCopyrightBox = false;
+  let inlineSubtitle = null;
 
-  // 1. Proteggi i blocchi di codice \code[lang]{...} prima della matematica
   let text = rawSource;
 
-  // Helper per sostituire comandi con argomenti bilanciati
-  function transformCommands(input, isInlinePass = false) {
+  function transformCommands(input) {
     let out = "";
     let i = 0;
 
     while (i < input.length) {
-      // Ignora math già tokenizzata
       if (input.startsWith("@@MATH_", i)) {
         const endTok = input.indexOf("@@", i + 7);
         if (endTok !== -1) {
@@ -1937,7 +2086,6 @@ function compileClawriDocument(rawSource) {
           const cmdName = cmdMatch[1];
           let cursor = i + cmdMatch[0].length;
 
-          // Leggi eventuali argomenti opzionali [...]
           const optArgs = [];
           while (input[cursor] === "[") {
             const opt = readBalanced(input, cursor, "[", "]");
@@ -1946,7 +2094,6 @@ function compileClawriDocument(rawSource) {
             cursor = opt.nextPos;
           }
 
-          // Leggi eventuali argomenti obbligatori {...}
           const reqArgs = [];
           while (input[cursor] === "{") {
             const req = readBalanced(input, cursor, "{", "}");
@@ -1955,27 +2102,32 @@ function compileClawriDocument(rawSource) {
             cursor = req.nextPos;
           }
 
-          // Comandi speciali
           if (cmdName === "copyright") {
             hasCopyrightBox = true;
             i = cursor;
             continue;
           }
 
+          if (cmdName === "subtitle" && reqArgs.length >= 1) {
+            inlineSubtitle = reqArgs[0].trim();
+            i = cursor;
+            continue;
+          }
+
           if (cmdName === "section" && reqArgs.length >= 1) {
-            out += `\n\n<h2>${transformCommands(reqArgs[0], true)}</h2>\n\n`;
+            out += `\n\n<h2>${transformCommands(reqArgs[0])}</h2>\n\n`;
             i = cursor;
             continue;
           }
 
           if (cmdName === "subsection" && reqArgs.length >= 1) {
-            out += `\n\n<h3>${transformCommands(reqArgs[0], true)}</h3>\n\n`;
+            out += `\n\n<h3>${transformCommands(reqArgs[0])}</h3>\n\n`;
             i = cursor;
             continue;
           }
 
           if (cmdName === "abstract" && reqArgs.length >= 1) {
-            out += `\n\n<div class="abstract-box p-summary"><span class="abstract-label">* Note dell'Autore</span><p class="abstract-text">${transformCommands(reqArgs[0], true)}</p></div>\n\n`;
+            out += `\n\n<div class="abstract-box p-summary"><span class="abstract-label">* Author's Notes</span><p class="abstract-text">${transformCommands(reqArgs[0])}</p></div>\n\n`;
             i = cursor;
             continue;
           }
@@ -1987,11 +2139,39 @@ function compileClawriDocument(rawSource) {
             const citeHtml = (author || source)
               ? `<cite>— ${escapeHtml(author)} ${source ? `<span class="quote-source">(${escapeHtml(source)})</span>` : ""}</cite>`
               : "";
-            out += `\n\n<blockquote class="quote-box"><p>${transformCommands(body, true)}</p>${citeHtml}</blockquote>\n\n`;
+            out += `\n\n<blockquote class="quote-box"><p>${transformCommands(body)}</p>${citeHtml}</blockquote>\n\n`;
             i = cursor;
             continue;
           }
 
+          /* \poem{...} — Centered Canto / Stanza layout matching prova.html */
+          if (cmdName === "poem" && reqArgs.length >= 1) {
+            const author = optArgs[0] || (reqArgs.length >= 3 ? reqArgs[0] : "");
+            const work = optArgs[1] || (reqArgs.length >= 3 ? reqArgs[1] : "");
+            const rawPoem = reqArgs[reqArgs.length - 1].trim();
+            const stanzas = rawPoem
+              .split(/\n\s*\n|\n\s*-{3,}\s*\n/)
+              .map(s => s.trim())
+              .filter(Boolean);
+
+            const stanzasHtml = stanzas.map(stanza => {
+              const verses = stanza.split("\n").map(v => v.trim()).filter(Boolean);
+              const versesHtml = verses
+                .map(v => `<div class="verse">${transformCommands(v)}</div>`)
+                .join("");
+              return `<div class="stanza">${versesHtml}</div>`;
+            }).join("");
+
+            const metaHtml = (author || work)
+              ? `<div class="poem-attribution">— ${escapeHtml(author)}${work ? `, <cite>${escapeHtml(work)}</cite>` : ""}</div>`
+              : "";
+
+            out += `\n\n<div class="canto-container">${stanzasHtml}${metaHtml}</div>\n\n`;
+            i = cursor;
+            continue;
+          }
+
+          /* \poetry[Author][Work]{...} — Boxed poem */
           if (cmdName === "poetry" && reqArgs.length >= 1) {
             const author = optArgs[0] || (reqArgs.length >= 3 ? reqArgs[0] : "");
             const work = optArgs[1] || (reqArgs.length >= 3 ? reqArgs[1] : "");
@@ -2005,7 +2185,7 @@ function compileClawriDocument(rawSource) {
                 return `<div class="verse-divider">-------------</div>`;
               }
               verseCounter++;
-              return `<div class="verse-line"><span class="verse-num">${verseCounter}</span><span>${transformCommands(trimmed, true)}</span></div>`;
+              return `<div class="verse-line"><span class="verse-num">${verseCounter}</span><span>${transformCommands(trimmed)}</span></div>`;
             }).join("");
 
             const metaHtml = (author || work)
@@ -2019,7 +2199,7 @@ function compileClawriDocument(rawSource) {
 
           if (cmdName === "footnote" && reqArgs.length >= 1) {
             const fnNum = footnotes.length + 1;
-            footnotes.push({ num: fnNum, html: transformCommands(reqArgs[0], true) });
+            footnotes.push({ num: fnNum, html: transformCommands(reqArgs[0]) });
             out += `<sup class="fn-ref" id="fnref-${fnNum}"><a href="#fn-${fnNum}" data-fn="${fnNum}">[${fnNum}]</a></sup>`;
             i = cursor;
             continue;
@@ -2042,35 +2222,35 @@ function compileClawriDocument(rawSource) {
           }
 
           if (cmdName === "link" && reqArgs.length >= 2) {
-            out += `<a href="${escapeHtml(reqArgs[0].trim())}" target="_blank" rel="noopener">${transformCommands(reqArgs[1], true)}</a>`;
+            out += `<a href="${escapeHtml(reqArgs[0].trim())}" target="_blank" rel="noopener">${transformCommands(reqArgs[1])}</a>`;
             i = cursor;
             continue;
           }
 
           if (cmdName === "textbf" && reqArgs.length >= 1) {
-            out += `<strong>${transformCommands(reqArgs[0], true)}</strong>`;
+            out += `<strong>${transformCommands(reqArgs[0])}</strong>`;
             i = cursor;
             continue;
           }
 
           if (cmdName === "textit" && reqArgs.length >= 1) {
-            out += `<em>${transformCommands(reqArgs[0], true)}</em>`;
+            out += `<em>${transformCommands(reqArgs[0])}</em>`;
             i = cursor;
             continue;
           }
 
           if (cmdName === "underline" && reqArgs.length >= 1) {
-            out += `<u>${transformCommands(reqArgs[0], true)}</u>`;
+            out += `<u>${transformCommands(reqArgs[0])}</u>`;
             i = cursor;
             continue;
           }
 
-          // Comandi personalizzati definiti dall'utente in Settings
+          // Custom user commands from Settings
           const customDef = (appState.customCommands || []).find(c => c.name === "\\" + cmdName);
           if (customDef) {
             let rendered = customDef.template;
             reqArgs.forEach((arg, idx) => {
-              const compiledArg = transformCommands(arg, true);
+              const compiledArg = transformCommands(arg);
               rendered = rendered.split(`{{${idx + 1}}}`).join(compiledArg);
             });
             out += rendered;
@@ -2086,7 +2266,7 @@ function compileClawriDocument(rawSource) {
     return out;
   }
 
-  // Estrai $$...$$ e $...$ prima della trasformazione dei comandi
+  // Extract $$...$$ and $...$ before command compilation
   text = text.replace(/\$\$([\s\S]+?)\$\$/g, (match) => {
     const id = mathTokens.length;
     mathTokens.push({ display: true, raw: match });
@@ -2099,27 +2279,25 @@ function compileClawriDocument(rawSource) {
     return `@@MATH_${id}@@`;
   });
 
-  // Rimuovi commenti stile LaTeX (% a inizio riga)
+  // Strip LaTeX-style comments (% at start of line)
   const rawLines = text.split("\n");
   const cleanedLines = rawLines.map(l => l.trim().startsWith("%") ? "" : l);
   text = cleanedLines.join("\n");
 
-  // Compila comandi
-  let compiled = transformCommands(text, false);
+  let compiled = transformCommands(text);
 
-  // Ripristina matematica
+  // Restore math
   compiled = compiled.replace(/@@MATH_(\d+)@@/g, (_, idx) => {
     const tok = mathTokens[Number(idx)];
     if (!tok) return "";
     return tok.display ? `<div class="math-block">${tok.raw}</div>` : tok.raw;
   });
 
-  // Suddividi in blocchi per paragrafi e mappa approssimativamente le righe sorgente
+  // Split into blocks and map approximate source line numbers for synchronized scrolling
   const blocks = compiled.split(/\n{2,}/).map(b => b.trim()).filter(Boolean);
   let searchOffset = 0;
 
   const htmlBlocks = blocks.map(block => {
-    // Trova una riga approssimativa nel sorgente originale per lo scroll sincronizzato
     const probe = block.replace(/<[^>]+>/g, "").trim().slice(0, 24);
     let lineNum = 1;
     if (probe.length > 3) {
@@ -2137,42 +2315,44 @@ function compileClawriDocument(rawSource) {
     return `<p data-source-line="${lineNum}">${block.replace(/\n/g, "<br>")}</p>`;
   });
 
-  // Sezione Note a piè di pagina
+  // Footnotes section
   if (footnotes.length > 0) {
     const fnItems = footnotes.map(fn =>
       `<li id="fn-${fn.num}">${fn.html} <a href="#fnref-${fn.num}" class="fn-backlink">↩</a></li>`
     ).join("");
     htmlBlocks.push(`
       <section class="footnotes" id="footnotes-section">
-        <div class="section-title-box">Note</div>
+        <div class="section-title-box">Footnotes</div>
         <ol>${fnItems}</ol>
       </section>
     `);
   }
 
-  // Box Licenza CC se presente \copyright
+  // CC License box if \copyright is present
   const licenseHtml = hasCopyrightBox ? `
     <div class="abstract-box p-summary">
-      <span class="abstract-label">* Licenza</span>
+      <span class="abstract-label">* License</span>
       <p class="abstract-text">
-        Quest'opera è distribuita con Licenza Creative Commons Attribuzione - Non commerciale - Non opere derivate 4.0 Internazionale (CC BY-NC-ND 4.0). Puoi condividerla citando l'autore e la fonte, senza modificarla né usarla a scopi commerciali.
+        This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0). You may share it with proper attribution to the author and source, without modifying it or using it for commercial purposes.
       </p>
     </div>` : "";
 
   return {
     bodyHtml: htmlBlocks.join("\n"),
-    licenseHtml
+    licenseHtml,
+    inlineSubtitle
   };
 }
 
 function buildFullStandaloneHTML() {
   const { meta, activeTheme, cssByTheme, customJS, source } = appState;
-  const activeCSS = cssByTheme[activeTheme] || THEME_RETRO_CSS;
-  const { bodyHtml, licenseHtml } = compileClawriDocument(source);
+  const activeCSS = cssByTheme[activeTheme] || THEME_CLEAN_CSS;
+  const { bodyHtml, licenseHtml, inlineSubtitle } = compileClawriDocument(source);
+  const effectiveSubtitle = inlineSubtitle !== null ? inlineSubtitle : (meta.subtitle || "");
   const isoDate = meta.date.replace(/\//g, "-");
 
   return `<!DOCTYPE html>
-<html lang="${escapeHtml(meta.lang || 'it')}">
+<html lang="${escapeHtml(meta.lang || 'en')}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -2213,16 +2393,17 @@ ${activeCSS}
 <body>
     <div class="article-wrapper">
         <nav class="top-nav">
-            <a href="${escapeHtml(meta.backlink)}" class="back-home">&lt; [BLOG]</a>
+            <a href="${escapeHtml(meta.backlink)}" class="back-home">&lt; [INDEX]</a>
             <span class="nav-tag">${escapeHtml(meta.tag)}</span>
         </nav>
 
         <article class="h-entry">
             <header class="article-header">
                 <h1 class="post-title p-name">${escapeHtml(meta.title)}</h1>
+                ${effectiveSubtitle ? `<div class="subtitle">${escapeHtml(effectiveSubtitle)}</div>` : ""}
                 <div class="post-meta">
-                    <span>DATA: <time class="dt-published" datetime="${escapeHtml(isoDate)}">${escapeHtml(meta.date)}</time></span>
-                    <span>AUTORE: <span class="p-author">${escapeHtml(meta.author)}</span></span>
+                    <span>DATE: <time class="dt-published" datetime="${escapeHtml(isoDate)}">${escapeHtml(meta.date)}</time></span>
+                    <span>AUTHOR: <span class="p-author">${escapeHtml(meta.author)}</span></span>
                 </div>
             </header>
 
@@ -2235,7 +2416,7 @@ ${bodyHtml}
 
         <footer class="article-footer">
             <span>&copy; ${escapeHtml(meta.footer)}</span>
-            <span><a href="${escapeHtml(meta.backlink)}">[ BLOG ]</a></span>
+            <span><a href="${escapeHtml(meta.backlink)}">[ INDEX ]</a></span>
         </footer>
     </div>
 
@@ -2272,7 +2453,7 @@ ${bodyHtml}
 
                     const sidenote = document.createElement('div');
                     sidenote.className = 'sidenote-desktop';
-                    sidenote.innerHTML = '<span class="sidenote-num">* NOTA ' + link.dataset.fn + '</span>' + noteText.innerHTML;
+                    sidenote.innerHTML = '<span class="sidenote-num">* NOTE ' + link.dataset.fn + '</span>' + noteText.innerHTML;
                     articleBody.appendChild(sidenote);
 
                     const supParent = link.closest('sup');
@@ -2322,7 +2503,7 @@ ${customJS}
 }
 
 /* ============================================================================
-   5. AGGIORNAMENTO LIVE PREVIEW & SCROLL SINCRONIZZATO
+   5. LIVE PREVIEW UPDATE & SYNCHRONIZED SCROLLING
    ============================================================================ */
 function refreshPreview(fullReload = false) {
   const iframe = document.getElementById("preview-frame");
@@ -2343,8 +2524,25 @@ function refreshPreview(fullReload = false) {
       return;
     }
 
-    const { bodyHtml, licenseHtml } = compileClawriDocument(appState.source);
+    const { bodyHtml, licenseHtml, inlineSubtitle } = compileClawriDocument(appState.source);
+    const effectiveSubtitle = inlineSubtitle !== null ? inlineSubtitle : (appState.meta.subtitle || "");
+
     doc.querySelector(".post-title").textContent = appState.meta.title;
+    const subEl = doc.querySelector(".subtitle");
+    if (effectiveSubtitle) {
+      if (subEl) {
+        subEl.textContent = effectiveSubtitle;
+      } else {
+        const h1 = doc.querySelector(".post-title");
+        const div = doc.createElement("div");
+        div.className = "subtitle";
+        div.textContent = effectiveSubtitle;
+        h1.insertAdjacentElement("afterend", div);
+      }
+    } else if (subEl) {
+      subEl.remove();
+    }
+
     doc.querySelector(".nav-tag").textContent = appState.meta.tag;
     doc.querySelector(".p-author").textContent = appState.meta.author;
     doc.querySelector(".dt-published").textContent = appState.meta.date;
@@ -2394,7 +2592,7 @@ function syncPreviewScroll() {
 }
 
 /* ============================================================================
-   6. INIZIALIZZAZIONE CODEMIRROR CON VIM & SCORCIATOIE RICHIESTE
+   6. CODEMIRROR INITIALIZATION WITH VIM & CMD+E EXIT SHORTCUT
    ============================================================================ */
 CodeMirror.defineMode("clawri", function() {
   return {
@@ -2421,14 +2619,22 @@ function wrapSelectionWithCommand(cmd) {
   }
 }
 
+function exitToNormalMode() {
+  hideAutocomplete();
+  if (editor && currentMode !== "NORMAL") {
+    CodeMirror.Vim.handleKey(editor, "<Esc>", "user");
+  }
+  if (editor) editor.focus();
+}
+
 function initEditor() {
-  // Azione Vim personalizzata: 's' in Normal mode apre Settings!
+  // Custom Vim Normal-mode command: 's' opens Settings
   CodeMirror.Vim.defineAction("openClawriSettings", function() {
     openSettingsModal();
   });
   CodeMirror.Vim.mapCommand("s", "action", "openClawriSettings", {}, { context: "normal" });
 
-  // Azione Vim 't' in Normal mode apre il Template/Metadati
+  // Custom Vim Normal-mode command: 't' opens Template/Metadata
   CodeMirror.Vim.defineAction("openClawriTemplate", function() {
     openMetadataModal();
   });
@@ -2444,6 +2650,8 @@ function initEditor() {
     matchBrackets: true,
     autoCloseBrackets: { pairs: "()[]{}''\"\"$$" },
     extraKeys: {
+      "Cmd-E": () => exitToNormalMode(),
+      "Ctrl-E": () => exitToNormalMode(),
       "Tab": function(cm) {
         if (cmpMatches.length > 0) {
           acceptAutocomplete();
@@ -2473,12 +2681,11 @@ function initEditor() {
       "Ctrl-B": () => wrapSelectionWithCommand("textbf"),
       "Cmd-U": () => wrapSelectionWithCommand("underline"),
       "Ctrl-U": () => wrapSelectionWithCommand("underline"),
-      "Cmd-S": () => { saveState(); setStatus("Salvato in memoria locale!"); },
-      "Ctrl-S": () => { saveState(); setStatus("Salvato in memoria locale!"); }
+      "Cmd-S": () => { saveState(); setStatus("Saved to local storage!"); },
+      "Ctrl-S": () => { saveState(); setStatus("Saved to local storage!"); }
     }
   });
 
-  // Rileva cambio modalità Vim (NORMAL / INSERT / VISUAL)
   editor.on("vim-mode-change", function(e) {
     const mode = (e.mode || "normal").toUpperCase();
     currentMode = mode;
@@ -2523,10 +2730,11 @@ function focusEditor() {
 }
 
 /* ============================================================================
-   7. GESTIONE MODALI (TEMPLATE INIZIALE & SETTINGS 's')
+   7. MODALS MANAGEMENT (INITIAL TEMPLATE & SETTINGS 's')
    ============================================================================ */
 function openMetadataModal() {
   document.getElementById("meta-title").value = appState.meta.title;
+  document.getElementById("meta-subtitle").value = appState.meta.subtitle || "";
   document.getElementById("meta-author").value = appState.meta.author;
   document.getElementById("meta-date").value = appState.meta.date;
   document.getElementById("meta-tag").value = appState.meta.tag;
@@ -2539,19 +2747,20 @@ function openMetadataModal() {
 }
 
 function saveMetadata() {
-  appState.meta.title = document.getElementById("meta-title").value || "Senza Titolo";
-  appState.meta.author = document.getElementById("meta-author").value || "Autore";
+  appState.meta.title = document.getElementById("meta-title").value || "Untitled";
+  appState.meta.subtitle = document.getElementById("meta-subtitle").value || "";
+  appState.meta.author = document.getElementById("meta-author").value || "Author";
   appState.meta.date = document.getElementById("meta-date").value || "2026/11/19";
   appState.meta.tag = document.getElementById("meta-tag").value || "BLOG";
   appState.meta.backlink = document.getElementById("meta-backlink").value || "/blog.html";
   appState.meta.desc = document.getElementById("meta-desc").value || "";
   appState.meta.footer = document.getElementById("meta-footer").value || "2026";
-  appState.meta.lang = document.getElementById("meta-lang").value || "it";
+  appState.meta.lang = document.getElementById("meta-lang").value || "en";
 
   saveState();
   closeModals();
   refreshPreview(true);
-  setStatus("Metadati articolo aggiornati");
+  setStatus("Article metadata updated");
 }
 
 function loadSampleArticle() {
@@ -2600,8 +2809,8 @@ function renderCustomCommandsList() {
   const container = document.getElementById("custom-cmd-list");
   container.innerHTML = (appState.customCommands || []).map((c, idx) => `
     <div class="custom-cmd-row">
-      <input type="text" class="lazy-input" value="${escapeHtml(c.name)}" placeholder="\\nome" onchange="updateCustomCmd(${idx}, 'name', this.value)" />
-      <input type="number" class="lazy-input" min="0" max="5" value="${c.args}" title="Numero argomenti" onchange="updateCustomCmd(${idx}, 'args', this.value)" />
+      <input type="text" class="lazy-input" value="${escapeHtml(c.name)}" placeholder="\\name" onchange="updateCustomCmd(${idx}, 'name', this.value)" />
+      <input type="number" class="lazy-input" min="0" max="5" value="${c.args}" title="Number of arguments" onchange="updateCustomCmd(${idx}, 'args', this.value)" />
       <input type="text" class="lazy-input" value="${escapeHtml(c.template)}" placeholder="<span class='x'>{{1}}</span>" onchange="updateCustomCmd(${idx}, 'template', this.value)" />
       <button class="lazy-btn" style="color:var(--red);" onclick="removeCustomCmd(${idx})">X</button>
     </div>
@@ -2609,7 +2818,7 @@ function renderCustomCommandsList() {
 }
 
 function addCustomCommandRow() {
-  appState.customCommands.push({ name: "\\nuovo", args: 1, template: "<div>{{1}}</div>" });
+  appState.customCommands.push({ name: "\\custom", args: 1, template: "<div>{{1}}</div>" });
   renderCustomCommandsList();
 }
 
@@ -2630,16 +2839,16 @@ function applyAndCloseSettings() {
   updateThemePill();
   closeModals();
   refreshPreview(true);
-  setStatus("Stile e impostazioni applicati!");
+  setStatus("Style and settings applied!");
 }
 
 function updateThemePill() {
   const labels = {
-    retro: "🎨 Retro Blog",
-    clean: "🎨 Pulito Pulito",
-    custom: "🎨 CSS Custom"
+    clean: "Clean Minimal",
+    retro: "Retro Dark",
+    custom: "Custom CSS"
   };
-  document.getElementById("status-theme").textContent = labels[appState.activeTheme] || "🎨 Tema";
+  document.getElementById("status-theme").textContent = labels[appState.activeTheme] || "Theme";
 }
 
 function closeModals() {
@@ -2649,19 +2858,25 @@ function closeModals() {
   if (editor) editor.focus();
 }
 
-// Chiudi modali con Esc
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    if (document.getElementById("settings-modal").classList.contains("open")) {
-      applyAndCloseSettings();
-    } else if (document.getElementById("metadata-modal").classList.contains("open")) {
-      closeModals();
-    }
+// Global Cmd+E (and Ctrl+E) handler to exit modals or Insert/Visual mode
+window.addEventListener("keydown", (e) => {
+  const isExitCombo = (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "e";
+  if (!isExitCombo) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  if (document.getElementById("settings-modal").classList.contains("open")) {
+    applyAndCloseSettings();
+  } else if (document.getElementById("metadata-modal").classList.contains("open")) {
+    closeModals();
+  } else {
+    exitToNormalMode();
   }
-});
+}, true);
 
 /* ============================================================================
-   8. EXPORT (HTML STANDALONE / PDF) & IMPORT FILE
+   8. EXPORT (STANDALONE HTML / PDF) & FILE IMPORT
    ============================================================================ */
 function downloadFile(filename, content, mimeType) {
   const blob = new Blob([content], { type: mimeType });
@@ -2674,18 +2889,18 @@ function downloadFile(filename, content, mimeType) {
 }
 
 function slugify(str) {
-  return (str || "articolo")
+  return (str || "article")
     .toLowerCase()
     .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "") || "articolo";
+    .replace(/^-+|-+$/g, "") || "article";
 }
 
 function exportHTML() {
   const html = buildFullStandaloneHTML();
   const filename = slugify(appState.meta.title) + ".html";
   downloadFile(filename, html, "text/html;charset=utf-8");
-  setStatus(`Esportato ${filename}`);
+  setStatus(`Exported ${filename}`);
 }
 
 function exportPDF() {
@@ -2693,7 +2908,7 @@ function exportPDF() {
   if (iframe && iframe.contentWindow) {
     iframe.contentWindow.focus();
     iframe.contentWindow.print();
-    setStatus("Finestra di stampa / salvataggio PDF aperta");
+    setStatus("Print / Save as PDF dialog opened");
   }
 }
 
@@ -2732,16 +2947,16 @@ function triggerFileUpload(type) {
           if (cfg.customCommands) appState.customCommands = cfg.customCommands;
           saveState();
           openSettingsModal();
-          setStatus("Configurazione importata!");
+          setStatus("Configuration imported!");
         } catch (err) {
-          alert("File JSON non valido.");
+          alert("Invalid JSON file.");
         }
       } else if (type === "tex") {
         appState.source = content;
         editor.setValue(content);
         saveState();
         refreshPreview(true);
-        setStatus("Sorgente importato!");
+        setStatus("Source imported!");
       }
     };
     reader.readAsText(file);
@@ -2754,8 +2969,8 @@ function importSourceFile() {
 }
 
 function factoryReset() {
-  if (confirm("Ripristinare tutti gli stili e i comandi predefiniti?")) {
-    localStorage.removeItem("clawri_state_v1");
+  if (confirm("Reset all styles and custom commands to factory defaults?")) {
+    localStorage.removeItem("clawri_state_v2");
     appState = JSON.parse(JSON.stringify(DEFAULT_STATE));
     saveState();
     editor.setValue(appState.source);
@@ -2765,7 +2980,7 @@ function factoryReset() {
 }
 
 /* ============================================================================
-   9. AVVIO APPLICAZIONE
+   9. STARTUP
    ============================================================================ */
 function updateClock() {
   const now = new Date();
@@ -2781,9 +2996,8 @@ window.addEventListener("DOMContentLoaded", () => {
   updateClock();
   setInterval(updateClock, 15000);
 
-  // Chiede il template metadati alla prima apertura assoluta
-  if (!localStorage.getItem("clawri_visited_v1")) {
-    localStorage.setItem("clawri_visited_v1", "1");
+  if (!localStorage.getItem("clawri_visited_v2")) {
+    localStorage.setItem("clawri_visited_v2", "1");
     openMetadataModal();
   }
 });
