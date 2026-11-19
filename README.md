@@ -73,12 +73,16 @@ Clawri compiles a minimal LaTeX-style syntax into semantic HTML:
 
 * `\quote[Author][Source]{Blockquote text.}`
 
-* `\poetry[Author][Work]{
+* ```LaTeΧ
+\poetry[Author][Work]{
 First verse line
 Second verse line
 ---
 First line of second stanza
-}`
+} 
+```
+
+
 
 * Body text with a footnote`\footnote{Footnote content.}` and a `\link{[https://example.com](https://example.com)}{hyperlink}`.
 
