@@ -63,41 +63,40 @@
 Clawri compiles a minimal LaTeX-style syntax into semantic HTML:
 
 
-* `\abstract{Introductory note or summary box.}`
+```latex
+\abstract{Introductory note or summary box.}
 
-* `\section{Main Heading}`
-* `\subsection{Subheading}`
+\section{Main Heading}
+\subsection{Subheading}
 
-* Inline math `$E = mc^2$` and display equations:
-`$$\int_{-\infty}^{\infty} e^{-x^2}\,dx = \sqrt{\pi}$$`
+Inline math $E = mc^2$ and display equations:
 
-* `\quote[Author][Source]{Blockquote text.}`
+$$\int_{-\infty}^{\infty} e^{-x^2}\,dx = \sqrt{\pi}$$
 
-* ```LaTeΧ
+\quote[Author][Source]{Blockquote text.}
+
 \poetry[Author][Work]{
 First verse line
 Second verse line
 ---
 First line of second stanza
-} 
-```
+}
 
+Body text with a footnote\footnote{Footnote content.} and a \link{https://example.com}{hyperlink}.
 
-
-* Body text with a footnote`\footnote{Footnote content.}` and a `\link{[https://example.com](https://example.com)}{hyperlink}`.
-
-* `\code[python]{
+\code[python]{
 def main():
     return True
-}`
+}
 
-* `\image[Figure caption]{[https://example.com/image.png](https://example.com/image.png)}`
+\image[Figure caption]{https://example.com/image.png}
 
-* `\copyright`
+\copyright
+```
 
-* `\poetry` automatically numbers every verse line and converts `---` into a stanza divider.
-* `\copyright` appends the Creative Commons license notice block at the end of the article.
-* Lines starting with `%` are treated as comments and omitted from the output.
+- `\poetry` automatically numbers every verse line and converts `---` into a stanza divider.
+- `\copyright` appends the Creative Commons license notice block at the end of the article.
+- Lines starting with `%` are treated as comments and omitted from the output.
 
 ## Customization
 
