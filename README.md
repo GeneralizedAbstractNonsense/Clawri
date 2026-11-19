@@ -42,7 +42,7 @@
 | Mode | Key | Action |
 | :--- | :--- | :--- |
 | Normal | `i` / `a` / `o` | Enter Insert mode |
-| Insert / Visual | `Esc` | Return to Normal mode |
+| Insert / Visual | `Cmd/Ctrl + E` | Return to Normal mode |
 | Normal | `h` `j` `k` `l` / Arrow keys | Move cursor |
 | Normal | `s` | Open Settings (Themes, CSS, JS, Custom Commands) |
 | Normal | `t` | Open Article Metadata & Template settings |
