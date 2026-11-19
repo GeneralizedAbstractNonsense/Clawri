@@ -84,6 +84,12 @@ First line of second stanza
 
 Body text with a footnote\footnote{Footnote content.} and a \link{https://example.com}{hyperlink}.
 
+\poem{
+This is
+a poem.
+
+Yes, it is.}
+
 \code[python]{
 def main():
     return True
