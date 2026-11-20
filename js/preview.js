@@ -2,6 +2,8 @@
 /* ============================================================================
    MODULE 7: Clawri.Preview (NO AUTO-SCROLL ON TYPE/CLICK + Double-Click Sync)
    ============================================================================ */
+window.Clawri = window.Clawri || {};
+
 Clawri.Preview = (function() {
   let initialized = false;
   let timer = null;
