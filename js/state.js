@@ -9,7 +9,7 @@ Clawri.State = (function() {
       updatedAt: now,
       trashed: false,
       meta: {
-        title: title || "Enigmas of Time & Structure",
+        title: title || "Template",
         subtitle: "A Complete Showcase of Clawri v2.1",
         author: "Author Name",
         date: new Date().toISOString().slice(0, 10).replace(/-/g, '/'),
@@ -39,7 +39,7 @@ Clawri.State = (function() {
 
   const DEFAULT_GLOBAL_STATE = {
     activeProjectId: "proj_default",
-    projects: [createDefaultProject("proj_default", "Enigmas of Time & Structure", Clawri.Config.DEFAULT_SAMPLE_SOURCE)],
+    projects: [createDefaultProject("proj_default", "Template", Clawri.Config.DEFAULT_SAMPLE_SOURCE)],
     activeTheme: "clean",
     cssByTheme: {
       clean: Clawri.Config.THEME_CLEAN_CSS,
