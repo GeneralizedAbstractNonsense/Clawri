@@ -2,6 +2,8 @@
 /* ============================================================================
    MODULE 12: Clawri.Bootstrap (Global Events, Clock & Initialization)
    ============================================================================ */
+window.Clawri = window.Clawri || {};
+
 Clawri.Bootstrap = (function() {
   function setupEvents() {
     const cmdInput = document.getElementById("cmdline-input");
