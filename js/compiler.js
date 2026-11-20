@@ -1,4 +1,3 @@
-
 /* ============================================================================
    MODULE 6: Clawri.Compiler (ClawriTeX -> HTML & LaTeX Macro Preprocessor)
    ============================================================================ */
@@ -915,6 +914,7 @@ Clawri.Compiler = (function () {
     return {
       bodyHtml: htmlBlocks.join("\n"),
       licenseHtml,
+      footnotes,
       inlineTitle,
       inlineTag,
       inlineSubtitle,
@@ -924,9 +924,195 @@ Clawri.Compiler = (function () {
     };
   }
 
+  /* Costruisce l'intero documento HTML per l'iframe di preview e l'esportazione */
+  function buildFullDocumentHTML({ isExport = false, assetRewriteMap = null } = {}) {
+    const proj = Clawri.State.getActiveProject();
+    const state = Clawri.State.data;
+    const labels = state.labels || Clawri.Config.LABEL_PRESETS.en;
+    const compiled = compileDocument(proj.source || "", assetRewriteMap);
+
+    const title = compiled.inlineTitle || proj.meta.title || "Untitled";
+    const subtitle = compiled.inlineSubtitle !== null ? compiled.inlineSubtitle : (proj.meta.subtitle || "");
+    const author = compiled.inlineAuthor || proj.meta.author || "";
+    const date = compiled.inlineDate || proj.meta.date || "";
+    const tag = compiled.inlineTag !== null ? compiled.inlineTag : (proj.meta.tag || "");
+    const favicon = compiled.inlineFavicon || resolveAssetSrc(proj.meta.favicon || "media/icon.png", assetRewriteMap);
+    const lang = proj.meta.lang || "en";
+    const desc = proj.meta.desc || subtitle || title;
+    const backlink = proj.meta.backlink || "/blog.html";
+    const footerText = proj.meta.footer || "";
+    const pdfSize = proj.meta.pdfSize || "A4";
+
+    const activeTheme = state.activeTheme || "clean";
+    const themeCss = (state.cssByTheme && state.cssByTheme[activeTheme]) || Clawri.Config.THEME_CLEAN_CSS;
+
+    const fonts = state.fonts || {};
+    const extraFontsList = (fonts.googleExtra || "")
+      .split(",")
+      .map(f => f.trim())
+      .filter(Boolean)
+      .map(f => `&family=${encodeURIComponent(f).replace(/%20/g, "+")}:ital,wght@0,400;0,700;1,400`)
+      .join("");
+
+    const googleFontsHref = `https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Fira+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Gentium+Plus:ital,wght@0,400;0,700;1,400&family=GFS+Didot&family=Cardo:ital,wght@0,400;0,700;1,400&family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Press+Start+2P&family=VT323${extraFontsList}&display=swap`;
+
+    const headingCssRule = (fonts.heading && fonts.heading !== "inherit")
+      ? `.post-title, .article-content h2, .article-content h3 { font-family: ${fonts.heading} !important; }`
+      : "";
+
+    const fontOverrideCss = `
+      :root {
+        --font-serif: ${fonts.body || "Georgia, 'Times New Roman', serif"};
+        --font-code: ${fonts.code || "'Fira Code', monospace"};
+      }
+      html, body {
+        font-family: ${fonts.body || "Georgia, 'Times New Roman', serif"};
+        font-size: ${fonts.size || "19px"};
+      }
+      code, pre {
+        font-family: ${fonts.code || "'Fira Code', monospace"};
+      }
+      ${headingCssRule}
+      @page { size: ${pdfSize}; }
+    `;
+
+    const fnMap = {};
+    (compiled.footnotes || []).forEach(fn => {
+      fnMap[fn.num] = fn.html;
+    });
+    const safeFnJson = JSON.stringify(fnMap).replace(/</g, "\\u003c");
+
+    const customJsBlock = (isExport && state.customJS && state.customJS.trim() !== "// Additional custom JavaScript")
+      ? `<script>${state.customJS}<\/script>`
+      : "";
+
+    return `<!DOCTYPE html>
+<html lang="${escapeHtml(lang)}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${escapeHtml(title)}</title>
+  <meta name="description" content="${escapeHtml(desc)}" />
+  ${favicon ? `<link rel="icon" href="${escapeHtml(favicon)}" />` : ""}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="${googleFontsHref}" />
+  <style id="theme-css">${themeCss}</style>
+  <style id="font-override-css">${fontOverrideCss}</style>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
+        displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      },
+      startup: {
+        pageReady: function () {
+          return MathJax.startup.defaultPageReady().then(function () {
+            if (window.positionDesktopSidenotes) window.positionDesktopSidenotes();
+          });
+        }
+      }
+    };
+  <\/script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"><\/script>
+</head>
+<body>
+  <div id="mathjax-macro-defs" style="display:none;" aria-hidden="true">$$${state.latexMacros || ""}$$</div>
+
+  <div class="article-wrapper">
+    <nav class="top-nav">
+      <a class="back-home" href="${escapeHtml(backlink)}">${escapeHtml(labels.backIndex || "< [INDEX]")}</a>
+      ${tag ? `<span class="nav-tag">${escapeHtml(tag)}</span>` : "<span></span>"}
+    </nav>
+
+    <header class="article-header" data-tag="${escapeHtml(tag)}">
+      <div class="header-main-group">
+        <h1 class="post-title">${escapeHtml(title)}</h1>
+        ${subtitle ? `<div class="subtitle">${escapeHtml(subtitle)}</div>` : ""}
+        <div class="post-meta">
+          ${author ? `<span>${escapeHtml(labels.authorLabel || "AUTHOR:")} <strong>${escapeHtml(author)}</strong></span>` : ""}
+          ${date ? `<span>${escapeHtml(labels.dateLabel || "DATE:")} <time>${escapeHtml(date)}</time></span>` : ""}
+        </div>
+      </div>
+    </header>
+
+    <main class="article-content" id="article-body">
+      ${compiled.bodyHtml}
+      ${compiled.licenseHtml}
+    </main>
+
+    <footer class="article-footer">
+      <span>${escapeHtml(footerText)}</span>
+      <a href="${escapeHtml(backlink)}">${escapeHtml(labels.footerIndex || "[ INDEX ]")}</a>
+    </footer>
+  </div>
+
+  <div class="fn-overlay" id="fn-overlay">
+    <div class="fn-overlay-content">
+      <div class="fn-overlay-header">
+        <span id="fn-overlay-title">${escapeHtml(labels.notePrefix || "* NOTE")}</span>
+        <button type="button" class="fn-overlay-close" onclick="document.getElementById('fn-overlay').style.display='none'">${escapeHtml(labels.closeBtn || "[X] CLOSE")}</button>
+      </div>
+      <div id="fn-overlay-body"></div>
+    </div>
+  </div>
+
+  <script>
+    window.footnotesData = ${safeFnJson};
+    window.positionDesktopSidenotes = function () {
+      document.querySelectorAll('.sidenote-desktop').forEach(function (el) { el.remove(); });
+      if (window.innerWidth < 1280) return;
+      var articleBody = document.getElementById('article-body');
+      if (!articleBody) return;
+      var bodyRect = articleBody.getBoundingClientRect();
+      var lastBottom = 0;
+      document.querySelectorAll('sup.fn-ref[data-fnmode="margin"]').forEach(function (sup) {
+        var link = sup.querySelector('a[data-fn]');
+        if (!link) return;
+        var num = link.getAttribute('data-fn');
+        var html = window.footnotesData && window.footnotesData[num];
+        if (!html) return;
+        var supRect = sup.getBoundingClientRect();
+        var topPos = Math.max(supRect.top - bodyRect.top, lastBottom + 10);
+        var aside = document.createElement('aside');
+        aside.className = 'sidenote-desktop';
+        aside.style.top = topPos + 'px';
+        aside.innerHTML = '<span class="sidenote-num">[' + num + ']</span>' + html;
+        articleBody.appendChild(aside);
+        lastBottom = topPos + aside.offsetHeight;
+      });
+    };
+
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('sup.fn-ref a[data-fn]');
+      if (!a) return;
+      var num = a.getAttribute('data-fn');
+      var html = window.footnotesData && window.footnotesData[num];
+      if (html && window.innerWidth < 1280) {
+        e.preventDefault();
+        document.getElementById('fn-overlay-title').textContent = ${JSON.stringify(labels.notePrefix || "* NOTE")} + ' [' + num + ']';
+        document.getElementById('fn-overlay-body').innerHTML = html;
+        document.getElementById('fn-overlay').style.display = 'block';
+      }
+    });
+
+    window.addEventListener('resize', function () {
+      if (window.positionDesktopSidenotes) window.positionDesktopSidenotes();
+    });
+  <\/script>
+  ${customJsBlock}
+</body>
+</html>`;
+  }
+
   return {
     expandCustomListMacros,
     resolveAssetSrc,
-    compileDocument
+    compileDocument,
+    buildFullDocumentHTML
   };
 })();
