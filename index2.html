@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Clawri</title>
+
+  <link rel="icon" type="image/png" href="media/icon.png" id="app-favicon">
+
+  <!-- Fonts for LazyVim UI & Multi-Script / Polytonic Greek / IPA / Fira Sans Support -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link id="studio-google-fonts" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Fira+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Gentium+Plus:ital,wght@0,400;0,700;1,400&family=GFS+Didot&family=Cardo:ital,wght@0,400;0,700;1,400&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- CodeMirror 5 + Vim Keymap -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/keymap/vim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
+
+  <!-- JSZip for Self-Contained Blog .zip & .tex+PNG Bundle Exports -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+  <!-- ========================================================================
+       MODULE 0: STUDIO UI STYLES (Ready to extract to css/studio.css)
+       ======================================================================== -->
+
+  </head>
+<body>
+
+<div class="lazy-app">
+  <!-- Top Bar -->
+  <div class="lazy-top-bar">
+    <div class="lazy-brand">
+      <span class="lazy-brand-badge" onclick="Clawri.UI.openHomeModal()" title="Open Projects Dashboard (:home)">CLAWRI v2.1</span>
+      <span class="hint-desktop">[:] Command · [Space] Leader · [i] Insert · [Cmd+E] Normal · [Cmd+D] Blog .zip</span>
+    </div>
+    <div class="lazy-actions">
+      <button class="lazy-btn" onclick="Clawri.UI.openHomeModal()" title=":home">Home</button>
+      <button class="lazy-btn" onclick="Clawri.VFS.toggleFileTree()" title=":files">Files</button>
+      <button class="lazy-btn" onclick="Clawri.VFS.openTerminal()" title=":term">Term</button>
+      <button class="lazy-btn" onclick="Clawri.UI.openPropertiesModal()" title=":properties">Properties</button>
+      <button class="lazy-btn" onclick="Clawri.UI.openSettingsModal()" title=":settings">Settings</button>
+      <button class="lazy-btn" onclick="Clawri.UI.toggleZenFullscreen()" title="Fullscreen (Space f)">Zen</button>
+      <button class="lazy-btn" onclick="Clawri.UI.openHelpModal()" title=":help">Help</button>
+      <button class="lazy-btn accent" onclick="Clawri.Exporters.exportBlogZip()" title="Download Blog .zip (Cmd+D)">.zip</button>
+      <button class="lazy-btn accent" onclick="Clawri.Exporters.exportHTML()">HTML</button>
+      <button class="lazy-btn accent" onclick="Clawri.Exporters.exportPDF()">PDF</button>
+      <button class="lazy-btn warn" onclick="Clawri.Exporters.exportTeX()">.tex</button>
+      <button class="lazy-btn" onclick="Clawri.Exporters.exportClawriBundle()">.clawri</button>
+    </div>
+  </div>
+
+  <!-- Workspace Shell -->
+  <div class="workspace-shell">
+    <!-- Left Sidebar: File Tree (:files) -->
+    <aside class="file-tree-pane" id="file-tree-pane" tabindex="0">
+      <div class="pane-title">files — [VFS]</div>
+      <div class="file-tree-toolbar">
+        <span>PROJECT FILES</span>
+        <div class="file-tree-actions">
+          <button class="tree-icon-btn" onclick="Clawri.VFS.createFilePrompt()" title="New File (a)">+File</button>
+          <button class="tree-icon-btn" onclick="Clawri.VFS.createFolderPrompt()" title="New Folder (A)">+Dir</button>
+          <button class="tree-icon-btn" onclick="Clawri.VFS.triggerAssetUpload()" title="Upload Image/Asset">Up</button>
+          <button class="tree-icon-btn" onclick="Clawri.VFS.toggleFileTree()" title="Close (:files)">x</button>
+        </div>
+      </div>
+      <div class="file-tree-list" id="file-tree-list"></div>
+      <div class="file-tree-footer">
+        Drag & drop files here or into editor. [Enter] Open/Insert · [r] Rename · [d] Del
+      </div>
+    </aside>
+
+    <!-- Split Screen 50% / 50% -->
+    <div class="split-workspace" id="split-workspace">
+      <div class="pane focused" id="editor-pane" onclick="Clawri.Editor.focus()">
+        <div class="pane-title" id="editor-pane-title">main.clawri — [ClawriTeX]</div>
+        <div class="editor-container" id="editor-mount"></div>
+      </div>
+
+      <div class="pane" id="preview-pane">
+        <div class="pane-title" id="preview-pane-title">preview.html — Free scroll (Double-click to jump to source)</div>
+        <div class="preview-container">
+          <iframe id="preview-frame" title="Article Preview"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Quick Action Bar -->
+  <div class="mobile-bar" id="mobile-bar">
+    <button id="mob-btn-split" class="active" onclick="Clawri.UI.setMobileLayout('split')">Split</button>
+    <button id="mob-btn-editor" onclick="Clawri.UI.setMobileLayout('editor')">Editor</button>
+    <button id="mob-btn-preview" onclick="Clawri.UI.setMobileLayout('preview')">Preview</button>
+    <button onclick="Clawri.Editor.openCommandBar(':')">: Cmd</button>
+    <button onclick="Clawri.VFS.toggleFileTree()">Files</button>
+    <button onclick="Clawri.VFS.openTerminal()">Term</button>
+    <button onclick="Clawri.UI.openHomeModal()">Home</button>
+    <button onclick="Clawri.UI.openPropertiesModal()">Props</button>
+    <button onclick="Clawri.UI.openSettingsModal()">Settings</button>
+    <button onclick="Clawri.UI.toggleZenFullscreen()">Full</button>
+  </div>
+
+  <!-- Bottom Statusline -->
+  <div class="lualine">
+    <div class="lualine-left">
+      <div class="mode-badge" id="mode-badge">NORMAL</div>
+      <div class="lua-seg branch" onclick="Clawri.UI.openHomeModal()" style="cursor:pointer;" title="Switch Project (:home)"> <span id="status-project-name">main</span>*</div>
+      <div class="lua-seg theme-pill" onclick="Clawri.UI.openSettingsModal()" id="status-theme">Clean Minimal</div>
+      <div class="lua-seg dim" id="status-msg">Ready — Press ':' for commands, 'Space' for leader, 'Cmd+D' for .zip</div>
+    </div>
+    <div class="lualine-right">
+      <div class="lua-seg dim" id="status-script">UTF-8</div>
+      <div class="lua-seg" id="cursor-pos">Top 1:1</div>
+      <div class="lua-seg clock" id="status-clock">08:43</div>
+    </div>
+  </div>
+</div>
+
+<!-- Autocomplete Popup -->
+<div class="cmp-popup" id="cmp-popup">
+  <div class="cmp-header">
+    <span>LaTeX / Clawri</span>
+    <span>[Tab] Insert</span>
+  </div>
+  <div id="cmp-list"></div>
+</div>
+
+<!-- Command Bar (:) -->
+<div class="cmdline-overlay" id="cmdline-overlay">
+  <div class="cmdline-suggestions" id="cmdline-suggestions"></div>
+  <div class="cmdline-input-row">
+    <span class="cmdline-prompt">:</span>
+    <input type="text" id="cmdline-input" placeholder="home, files, term, settings, properties, export tex|zip|pdf|clawri|rss, help..." autocomplete="off" spellcheck="false" />
+  </div>
+</div>
+
+<!-- Virtual Terminal (:term) -->
+<div class="terminal-overlay" id="terminal-overlay">
+  <div class="terminal-header">
+    <span>CLAWRI VIRTUAL TERMINAL — Project VFS (type 'help' or 'exit')</span>
+    <button class="lazy-btn" onclick="Clawri.VFS.closeTerminal()">[exit / Cmd+E] Close</button>
+  </div>
+  <div class="terminal-output" id="terminal-output"></div>
+  <div class="terminal-input-row">
+    <span class="terminal-prompt" id="terminal-prompt">clawri:/$</span>
+    <input type="text" id="terminal-input" placeholder="ls, cd, mkdir, touch, mv, cp, rm, cat, open, clear, exit..." autocomplete="off" spellcheck="false" />
+  </div>
+</div>
+
+<!-- Home Dashboard (:home) -->
+<div class="home-overlay" id="home-overlay">
+  <div class="home-container">
+    <div class="modal-border-title">CLAWRI — LAZYVIM PROJECT WORKSPACE (:home)</div>
+    <div class="home-ascii">   ________    ___ _       ______  ____
+  / ____/ /   /   | |     / / __ \/  _/
+ / /   / /   / /| | | /| / / /_/ // /  
+/ /___/ /___/ ___ | |/ |/ / _, _// /   
+\____/_____/_/  |_|__/|__/_/ |_/___/   </div>
+    <div class="home-tabs">
+      <div class="home-tab-group">
+        <button class="modal-tab active" id="home-tab-active" onclick="Clawri.UI.switchHomeTab('active')">[1] Active Projects (<span id="home-count-active">0</span>)</button>
+        <button class="modal-tab" id="home-tab-trash" onclick="Clawri.UI.switchHomeTab('trash')">[2] Trash (<span id="home-count-trash">0</span>)</button>
+      </div>
+      <div class="home-tab-group">
+        <button class="lazy-btn accent" onclick="Clawri.State.createNewProject()">[n] New Project</button>
+        <button class="lazy-btn" onclick="Clawri.Exporters.importProjectFile()">[i] Import .clawri / .tex</button>
+        <button class="lazy-btn danger" id="home-empty-trash-btn" style="display:none;" onclick="Clawri.State.emptyTrash()">[Shift+E] Empty Trash</button>
+        <button class="lazy-btn" onclick="Clawri.UI.closeHomeModal()">[Cmd+E] Back to Editor</button>
+      </div>
+    </div>
+    <div class="home-list" id="home-project-list"></div>
+    <div class="home-footer">
+      <div class="hint-keys">
+        <kbd>j</kbd>/<kbd>k</kbd> Navigate · <kbd>Enter</kbd> Open · <kbd>Tab</kbd> Switch Trash · <kbd>Del</kbd>/<kbd>Cmd+X</kbd> Trash · <kbd>Cmd+D</kbd> Download Blog .zip · <kbd>r</kbd> Restore
+      </div>
+      <span id="home-storage-info">Local VFS Ready</span>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 1: Document Properties (:properties) -->
+<div class="modal-backdrop" id="properties-modal">
+  <div class="lazy-modal">
+    <div class="modal-border-title">DOCUMENT PROPERTIES — SOFT SETTINGS (:properties)</div>
+    <div class="modal-header">
+      <span style="color: var(--fg-main); font-weight: 700;">Page Metadata, Favicon, License & PDF Layout</span>
+      <button class="lazy-btn" onclick="Clawri.UI.closeModals()">[Cmd+E] Close</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Article Title (H1 & &lt;title&gt;)</label>
+          <input type="text" class="lazy-input" id="meta-title" placeholder="e.g. Enigmas of Death" />
+        </div>
+        <div class="form-group full">
+          <label>Subtitle (Optional — or use \subtitle{...} in code)</label>
+          <input type="text" class="lazy-input" id="meta-subtitle" placeholder="e.g. Reflections on Time and Shadow" />
+        </div>
+        <div class="form-group">
+          <label>Author (or \author[Role]{Name})</label>
+          <input type="text" class="lazy-input" id="meta-author" placeholder="Your name" />
+        </div>
+        <div class="form-group">
+          <label>Publication Date (YYYY/MM/DD)</label>
+          <input type="text" class="lazy-input" id="meta-date" />
+        </div>
+        <div class="form-group">
+          <label>Category Tag / Chapter Number (Nav Badge)</label>
+          <input type="text" class="lazy-input" id="meta-tag" placeholder="CANTO / POETRY / ESSAY / 10" />
+        </div>
+        <div class="form-group">
+          <label>Blog Back Link</label>
+          <input type="text" class="lazy-input" id="meta-backlink" value="/blog.html" />
+        </div>
+        <div class="form-group">
+          <label>Favicon (VFS Path, URL, or Upload)</label>
+          <div style="display:flex; gap:6px;">
+            <input type="text" class="lazy-input" id="meta-favicon" placeholder="assets/favicon.png or media/icon.png" />
+            <button class="lazy-btn" onclick="Clawri.VFS.triggerFaviconUpload()">Upload</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Default Footnote Placement</label>
+          <select class="lazy-select" id="meta-footnote-mode">
+            <option value="margin">Margin Sidenotes (Desktop) + Bottom / PDF Page Bottom</option>
+            <option value="bottom">Page Bottom Footnotes (Web & PDF)</option>
+            <option value="end">Endnotes Section</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Default License Preset</label>
+          <select class="lazy-select" id="meta-license-type">
+            <option value="CC BY-NC-ND 4.0">CC BY-NC-ND 4.0</option>
+            <option value="CC BY 4.0">CC BY 4.0 (Attribution)</option>
+            <option value="CC BY-SA 4.0">CC BY-SA 4.0 (ShareAlike)</option>
+            <option value="MIT">MIT License</option>
+            <option value="ALL RIGHTS RESERVED">All Rights Reserved</option>
+            <option value="PUBLIC DOMAIN">Public Domain (CC0)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>PDF Paper Size</label>
+          <select class="lazy-select" id="meta-pdf-size">
+            <option value="A4">A4 (210mm x 297mm)</option>
+            <option value="Letter">US Letter (8.5in x 11in)</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>SEO Description (Meta Description & RSS Summary)</label>
+          <input type="text" class="lazy-input" id="meta-desc" placeholder="Short description for search engines and RSS..." />
+        </div>
+        <div class="form-group">
+          <label>Footer Copyright Text</label>
+          <input type="text" class="lazy-input" id="meta-footer" value="2026 — THE END OF TIME" />
+        </div>
+        <div class="form-group">
+          <label>Document Language</label>
+          <select class="lazy-select" id="meta-lang">
+            <option value="en">English (en)</option>
+            <option value="it">Italian (it)</option>
+            <option value="fr">French (fr)</option>
+            <option value="de">German (de)</option>
+            <option value="es">Spanish (es)</option>
+            <option value="la">Latin (la)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="hint-keys"><kbd>Cmd+E</kbd> Close · Use <code>\title</code>, <code>\author</code>, <code>\date</code>, <code>\copyright[LIC]{text}</code> in code too</div>
+      <div style="display:flex; gap:8px;">
+        <button class="lazy-btn" onclick="Clawri.State.loadSampleArticle()">Load Full Showcase</button>
+        <button class="lazy-btn accent" onclick="Clawri.UI.saveProperties()">Apply Properties</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 2: Hard Settings (:settings) -->
+<div class="modal-backdrop" id="settings-modal">
+  <div class="lazy-modal settings-modal">
+    <div class="modal-border-title">HARD SETTINGS — TEMPLATES, FONTS, LABELS, COMMANDS & RSS (:settings)</div>
+    <div class="modal-header">
+      <div class="modal-tabs">
+        <button class="modal-tab active" data-tab="themes" onclick="Clawri.UI.switchSettingsTab('themes')">1. Templates & CSS</button>
+        <button class="modal-tab" data-tab="fonts" onclick="Clawri.UI.switchSettingsTab('fonts')">2. Fonts & Scripts</button>
+        <button class="modal-tab" data-tab="labels" onclick="Clawri.UI.switchSettingsTab('labels')">3. Template Labels</button>
+        <button class="modal-tab" data-tab="macros" onclick="Clawri.UI.switchSettingsTab('macros')">4. LaTeX Macros</button>
+        <button class="modal-tab" data-tab="commands" onclick="Clawri.UI.switchSettingsTab('commands')">5. Inline Cmds & Boxes</button>
+        <button class="modal-tab" data-tab="rss" onclick="Clawri.UI.switchSettingsTab('rss')">6. RSS & JS</button>
+        <button class="modal-tab" data-tab="backup" onclick="Clawri.UI.switchSettingsTab('backup')">7. Backup</button>
+      </div>
+      <button class="lazy-btn" onclick="Clawri.UI.applyAndCloseSettings()">[Cmd+E] Save & Close</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Tab 1: Templates -->
+      <div id="tab-themes" class="settings-panel" style="display:flex; flex-direction:column; gap:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <span style="font-size:11px; color:var(--cyan);">SELECT WEB OR PDF TEMPLATE (Auto-scans <code>themes/html/</code> & <code>themes/pdf-latex/</code>)</span>
+          <div style="display:flex; gap:6px;">
+            <button class="lazy-btn" onclick="Clawri.Config.discoverRepoThemes(true)">Refresh Repo Themes</button>
+          </div>
+        </div>
+        <div class="theme-cards" id="theme-cards-grid"></div>
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+            <label>Active CSS Stylesheet (Freely Editable)</label>
+            <div style="display:flex; gap:6px;">
+              <button class="lazy-btn" onclick="Clawri.UI.resetThemeCSS()">Reset Default CSS</button>
+              <button class="lazy-btn" onclick="Clawri.Exporters.triggerFileUpload('css')">Upload .css file</button>
+            </div>
+          </div>
+          <textarea class="lazy-textarea" id="settings-css-editor" spellcheck="false"></textarea>
+        </div>
+      </div>
+
+      <!-- Tab 2: Fonts -->
+      <div id="tab-fonts" class="settings-panel" style="display:none; flex-direction:column; gap:14px;">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Primary Body Font Family</label>
+            <select class="lazy-select" id="font-body-select">
+              <option value="Georgia, 'Times New Roman', serif">Georgia / Classic Serif</option>
+              <option value="'Latin Modern Roman', 'Computer Modern', 'CMU Serif', Georgia, serif">Classic LaTeX (Latin Modern / CMU)</option>
+              <option value="'Times New Roman', Times, serif">Times New Roman</option>
+              <option value="'Fira Sans', -apple-system, BlinkMacSystemFont, sans-serif">Fira Sans (LaTeX Sans)</option>
+              <option value="'Century Gothic', CenturyGothic, AppleGothic, sans-serif">Century Gothic</option>
+              <option value="Arial, Helvetica, sans-serif">Arial / Helvetica</option>
+              <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">Modern System Sans</option>
+              <option value="'Gentium Plus', 'GFS Didot', Georgia, serif">Polytonic Greek — Gentium Plus</option>
+              <option value="'GFS Didot', 'Gentium Plus', Georgia, serif">Polytonic Greek — GFS Didot</option>
+              <option value="'Cardo', 'Gentium Plus', Georgia, serif">Classical & Polytonic — Cardo</option>
+              <option value="'Noto Serif', Georgia, serif">Universal Multi-Script — Noto Serif</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Heading / Title Font Family</label>
+            <select class="lazy-select" id="font-heading-select">
+              <option value="inherit">Same as Body / Theme Default</option>
+              <option value="'Fira Sans', -apple-system, BlinkMacSystemFont, sans-serif">Fira Sans (Dispense / LaTeX Sans)</option>
+              <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">Clean Sans-Serif</option>
+              <option value="'Latin Modern Roman', 'CMU Serif', Georgia, serif">Classic LaTeX Serif</option>
+              <option value="'Times New Roman', Times, serif">Times New Roman</option>
+              <option value="'Century Gothic', sans-serif">Century Gothic</option>
+              <option value="Arial, Helvetica, sans-serif">Arial</option>
+              <option value="'GFS Didot', 'Gentium Plus', serif">GFS Didot (Polytonic Greek)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Monospace / Code Font</label>
+            <select class="lazy-select" id="font-code-select">
+              <option value="'Fira Code', 'JetBrains Mono', monospace">Fira Code / JetBrains Mono</option>
+              <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
+              <option value="'Courier New', Courier, monospace">Courier New</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Base Font Size</label>
+            <select class="lazy-select" id="font-size-select">
+              <option value="16px">16px (Compact / PDF)</option>
+              <option value="17px">17px (Standard Academic)</option>
+              <option value="18px">18px (Comfortable)</option>
+              <option value="19px">19px (Editorial Default)</option>
+              <option value="21px">21px (Large Reading)</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label>Additional Google Fonts (Comma-separated)</label>
+            <input type="text" class="lazy-input" id="font-google-extra" placeholder="EB Garamond, Noto Sans Arabic, Noto Serif JP" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Labels -->
+      <div id="tab-labels" class="settings-panel" style="display:none; flex-direction:column; gap:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <span style="font-size:11px; color:var(--cyan);">CUSTOMIZE TEMPLATE TEXTS & LABELS</span>
+          <div style="display:flex; gap:5px; flex-wrap:wrap;">
+            <button class="lazy-btn" onclick="Clawri.UI.applyLabelLanguagePreset('en')">English</button>
+            <button class="lazy-btn" onclick="Clawri.UI.applyLabelLanguagePreset('it')">Italiano</button>
+            <button class="lazy-btn" onclick="Clawri.UI.applyLabelLanguagePreset('fr')">Français</button>
+            <button class="lazy-btn" onclick="Clawri.UI.applyLabelLanguagePreset('de')">Deutsch</button>
+            <button class="lazy-btn" onclick="Clawri.UI.applyLabelLanguagePreset('es')">Español</button>
+            <button class="lazy-btn" onclick="Clawri.UI.applyLabelLanguagePreset('la')">Latina</button>
+          </div>
+        </div>
+        <div class="form-grid" id="labels-grid"></div>
+      </div>
+
+      <!-- Tab 4: LaTeX Macros -->
+      <div id="tab-macros" class="settings-panel" style="display:none; flex-direction:column; gap:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div>
+            <label style="color:var(--cyan); font-size:11px;">CUSTOM LATEX MATH SHORTCUTS (\newcommand)</label>
+            <p style="font-size:11px; color:var(--fg-muted); margin-top:3px;">Active in MathJax & <code>.tex</code> export.</p>
+          </div>
+          <button class="lazy-btn" onclick="Clawri.UI.resetDefaultLatexMacros()">Restore Built-in Macros</button>
+        </div>
+        <textarea class="lazy-textarea" id="settings-latex-macros" style="min-height:260px;" spellcheck="false"></textarea>
+      </div>
+
+      <!-- Tab 5: Inline Commands & Boxes -->
+      <div id="tab-commands" class="settings-panel" style="display:none; flex-direction:column; gap:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div>
+            <label style="color:var(--cyan); font-size:11px;">CUSTOM & INLINE HTML COMMANDS (\cmd{arg1}{arg2})</label>
+            <p style="font-size:11px; color:var(--fg-muted); margin-top:2px;">
+              Use <code>{{1}}</code>, <code>{{2}}</code> for required arguments and <code>{{opt}}</code> for optional <code>[...]</code> argument. Clean borderless styling by default!
+            </p>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="lazy-btn" onclick="Clawri.Commands.exportCommandsJSON()">Export commands.json</button>
+            <button class="lazy-btn" onclick="Clawri.Exporters.triggerFileUpload('commands')">Import commands.json</button>
+            <button class="lazy-btn accent" onclick="Clawri.UI.addCustomCommandRow()">+ New Inline Command</button>
+          </div>
+        </div>
+        <div class="custom-cmd-list" id="custom-cmd-list"></div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+          <div>
+            <label style="color:var(--cyan); font-size:11px;">CUSTOM CALLOUT BOXES (\begin{box}[style][Title])</label>
+            <p style="font-size:11px; color:var(--fg-muted); margin-top:2px;">Define custom box styles with border/bg/text colors and icons.</p>
+          </div>
+          <button class="lazy-btn accent" onclick="Clawri.UI.addCustomBoxRow()">+ New Box Style</button>
+        </div>
+        <div class="custom-cmd-list" id="custom-box-list"></div>
+      </div>
+
+      <!-- Tab 6: RSS & JS -->
+      <div id="tab-rss" class="settings-panel" style="display:none; flex-direction:column; gap:12px;">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Blog / Site Base URL</label>
+            <input type="text" class="lazy-input" id="rss-site-url" placeholder="https://yourdomain.com" />
+          </div>
+          <div class="form-group">
+            <label>RSS Feed Title</label>
+            <input type="text" class="lazy-input" id="rss-feed-title" placeholder="My Mathematical & Literary Blog" />
+          </div>
+          <div class="form-group full">
+            <label>RSS Feed Description</label>
+            <input type="text" class="lazy-input" id="rss-feed-desc" placeholder="Essays, mathematics, and poetry published with Clawri." />
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="lazy-btn accent" onclick="Clawri.Exporters.exportRSS()">Download rss.xml</button>
+          <button class="lazy-btn" onclick="Clawri.Exporters.previewRSSModal()">Inspect Generated RSS 2.0 XML</button>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+          <label style="color:var(--cyan); font-size:11px;">ADDITIONAL JAVASCRIPT (Injected into exported HTML)</label>
+          <button class="lazy-btn" onclick="Clawri.Exporters.triggerFileUpload('js')">Upload .js file</button>
+        </div>
+        <textarea class="lazy-textarea" id="settings-js-editor" style="min-height:120px;" placeholder="// Custom JS..." spellcheck="false"></textarea>
+      </div>
+
+      <!-- Tab 7: Backup -->
+      <div id="tab-backup" class="settings-panel" style="display:none; flex-direction:column; gap:14px;">
+        <p style="font-size:12px; color:var(--fg-main); line-height:1.6;">
+          Export or import your global configuration (<code>clawri-theme-config.json</code>), or use <code>:export clawri</code> to save a complete self-contained <code>.clawri</code> project bundle.
+        </p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="lazy-btn accent" onclick="Clawri.Exporters.exportConfigJSON()">Export Global Config (.json)</button>
+          <button class="lazy-btn" onclick="Clawri.Exporters.triggerFileUpload('json')">Import Global Config (.json)</button>
+          <button class="lazy-btn danger" onclick="Clawri.State.factoryReset()">Factory Reset All Data</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="hint-keys"><kbd>Cmd+E</kbd> Save & Close</div>
+      <button class="lazy-btn accent" onclick="Clawri.UI.applyAndCloseSettings()">Save & Apply Settings</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 3: VFS Text/Bib File Editor Modal -->
+<div class="modal-backdrop" id="vfs-editor-modal">
+  <div class="lazy-modal" style="max-width: 720px;">
+    <div class="modal-border-title" id="vfs-editor-title">EDIT PROJECT FILE</div>
+    <div class="modal-header">
+      <span id="vfs-editor-path-label" style="color: var(--cyan); font-weight: 700;">references.bib</span>
+      <button class="lazy-btn" onclick="Clawri.UI.closeModals()">[Cmd+E] Cancel</button>
+    </div>
+    <div class="modal-body">
+      <textarea class="lazy-textarea" id="vfs-editor-textarea" style="min-height: 280px;" spellcheck="false"></textarea>
+    </div>
+    <div class="modal-footer">
+      <div class="hint-keys">Changes are saved directly into your project VFS</div>
+      <button class="lazy-btn accent" onclick="Clawri.VFS.saveModalFile()">Save File</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 4: Help Reference (:help) -->
+<div class="modal-backdrop" id="help-modal">
+  <div class="lazy-modal" style="max-width: 900px;">
+    <div class="modal-border-title">CLAWRI v2.1 REFERENCE, COMMANDS & PLOTS (:help)</div>
+    <div class="modal-header">
+      <span style="color: var(--cyan); font-weight: 700;">Keyboard Shortcuts, Inline Commands, Lists & 2D/3D Plots</span>
+      <button class="lazy-btn" onclick="Clawri.UI.closeModals()">[Cmd+E] Close</button>
+    </div>
+    <div class="modal-body" id="help-modal-body" style="font-size:12px; line-height:1.65;"></div>
+    <div class="modal-footer">
+      <div class="hint-keys"><kbd>Cmd+E</kbd> Close Help</div>
+      <button class="lazy-btn accent" onclick="Clawri.State.loadSampleArticle(); Clawri.UI.closeModals();">Load Interactive Demo Document</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="hidden-file-input" style="display:none;" />
+
+<script>
+/* ============================================================================
+   CLAWRI MODULAR ARCHITECTURE (window.Clawri)
+   Each section below is completely self-contained and ready to be extracted
+   1-to-1 into separate .js files on GitHub.
+   ============================================================================ */
+window.Clawri = window.Clawri || {};
+
+/* ============================================================================
+   MODULE 1: Clawri.Utils (Shared Pure Helpers)
+   ============================================================================ */
+  /* ============================================================================
+   MODULE 2: Clawri.Config (Themes, Macros, Labels & Default Showcase)
+   ============================================================================ */
+  /* ============================================================================
+   MODULE 3: Clawri.Commands (DECLARATIVE COMMANDS REGISTRY — EASY TO EDIT!)
+   Want to add or edit an inline command? Just add an entry to INLINE_COMMANDS!
+   ============================================================================ */
+  /* ============================================================================
+   MODULE 4: Clawri.State (Multi-Project Persistence & Trash)
+   ============================================================================ */
+  /* ============================================================================
+   MODULE 5: Clawri.Graphics (Diagrams, Sets, Graphs, Trees, Clipped 2D/3D Plots)
+   ============================================================================ */
+  /* ============================================================================
+   MODULE 6: Clawri.Compiler (ClawriTeX -> HTML & LaTeX Macro Preprocessor)
+   ============================================================================ */
+  /* ============================================================================
+   MODULE 7: Clawri.Preview (NO AUTO-SCROLL ON TYPE/CLICK + Double-Click Sync)
+   ============================================================================ */
+  /* ============================================================================
+   MODULE 8: Clawri.VFS (Hierarchical File Tree, Drag & Drop & Virtual Terminal)
+   ============================================================================ */
+  /* ============================================================================
+   MODULE 9: Clawri.Editor (CodeMirror 5 Vim, Autocomplete & Command Bar)
+   ============================================================================ */
+  /* ============================================================================
+   MODULE 10: Clawri.UI (Modals, Custom Inline Command Editor, Home & Help)
+   ============================================================================ */
+  /* ============================================================================
+   MODULE 11: Clawri.Exporters (Blog .zip, HTML, PDF, .tex+PNG, .clawri, RSS)
+   ============================================================================ */
+  /* ============================================================================
+   MODULE 12: Clawri.Bootstrap (Global Events, Clock & Initialization)
+   ============================================================================ */
+  </script>
+</body>
+</html>
