@@ -109,6 +109,10 @@ Clawri.State = (function() {
 
   const data = load();
 
+  function get() {
+    return data;
+  }
+
   function save() {
     try {
       const proj = getActiveProject();
@@ -230,6 +234,7 @@ Clawri.State = (function() {
   return {
     DEFAULT_GLOBAL_STATE,
     data,
+    get,
     save,
     createDefaultProject,
     getActiveProject,
