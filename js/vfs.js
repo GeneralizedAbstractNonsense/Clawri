@@ -2,6 +2,8 @@
 /* ============================================================================
    MODULE 8: Clawri.VFS (Hierarchical File Tree, Drag & Drop & Virtual Terminal)
    ============================================================================ */
+window.Clawri = window.Clawri || {};
+
 Clawri.VFS = (function() {
   const { escapeHtml } = Clawri.Utils;
   let selectedPath = "main.clawri";
