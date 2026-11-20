@@ -2,6 +2,9 @@
 /* ============================================================================
    MODULE 11: Clawri.Exporters (Blog .zip, HTML, PDF, .tex+PNG, .clawri, RSS)
    ============================================================================ */
+window.Clawri = window.Clawri || {};
+
+
 Clawri.Exporters = (function() {
   const { escapeHtml, slugify } = Clawri.Utils;
 
