@@ -2,6 +2,8 @@
 /* ============================================================================
    MODULE 2: Clawri.Config (Themes, Macros, Labels & Default Showcase)
    ============================================================================ */
+window.Clawri = window.Clawri || {};
+
 Clawri.Config = (function() {
   const DEFAULT_LATEX_MACROS = String.raw`\newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
@@ -396,8 +398,8 @@ body { display: flex; flex-direction: column; align-items: center; padding: 24px
     { key: "clean", kind: "WEB", name: "Clean Minimal", desc: "Light editorial blog layout with desktop sidenotes & mobile drawer.", css: THEME_CLEAN_CSS, thumb: TEMPLATE_THUMBS.clean },
     { key: "retro", kind: "WEB", name: "Retro Dark", desc: "Pitch-black terminal & pixel aesthetic with high-contrast accents.", css: THEME_RETRO_CSS, thumb: TEMPLATE_THUMBS.retro },
     { key: "pdf_paper", kind: "PDF", name: "PDF Academic Paper", desc: "LaTeX-inspired A4/Letter article layout with bottom footnotes.", css: THEME_PDF_PAPER_CSS, thumb: TEMPLATE_THUMBS.pdf_paper },
-    { key: "pdf_dispense", kind: "PDF", name: "Dispense di Teoria", desc: "tcolorbox lecture notes: red chapter number, Fira Sans + Latin Modern.", css: THEME_PDF_DISPENSE_CSS, thumb: TEMPLATE_THUMBS.pdf_dispense },
-    { key: "pdf_exam", kind: "PDF", name: "PDF Exam Sheet (Verifica)", desc: "Printable exam header with student name, class, score & exercises.", css: THEME_PDF_EXAM_CSS, thumb: TEMPLATE_THUMBS.pdf_exam },
+    { key: "pdf_dispense", kind: "PDF", name: "Notes", desc: "tcolorbox lecture notes: red chapter number, Fira Sans + Latin Modern.", css: THEME_PDF_DISPENSE_CSS, thumb: TEMPLATE_THUMBS.pdf_dispense },
+    { key: "pdf_exam", kind: "PDF", name: "PDF Exam Sheet", desc: "Printable exam header with student name, class, score & exercises.", css: THEME_PDF_EXAM_CSS, thumb: TEMPLATE_THUMBS.pdf_exam },
     { key: "pdf_worksheet", kind: "PDF", name: "PDF Exercise Sheet", desc: "Structured problem set & worksheet template for math & sciences.", css: THEME_PDF_WORKSHEET_CSS, thumb: TEMPLATE_THUMBS.pdf_worksheet },
     { key: "custom", kind: "CUSTOM", name: "Custom CSS", desc: "Your own custom or uploaded CSS stylesheet.", css: THEME_CLEAN_CSS, thumb: TEMPLATE_THUMBS.custom }
   ];
