@@ -2,6 +2,8 @@
 /* ============================================================================
    MODULE 1: Clawri.Utils (Shared Pure Helpers)
    ============================================================================ */
+window.Clawri = window.Clawri || {};
+
 Clawri.Utils = (function() {
   function escapeHtml(str) {
     return String(str)
