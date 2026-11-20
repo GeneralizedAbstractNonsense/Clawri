@@ -2,6 +2,9 @@
 /* ============================================================================
    MODULE 9: Clawri.Editor (CodeMirror 5 Vim, Autocomplete & Command Bar)
    ============================================================================ */
+window.Clawri = window.Clawri || {};
+
+
 Clawri.Editor = (function() {
   const { escapeHtml } = Clawri.Utils;
   let cm = null;
