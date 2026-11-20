@@ -3,5 +3,10 @@
 "file": "colorfultextbook.json",
 "name": "Colorful Textbook",
 "description": "A template for a textbook."
+},
+{
+"file": "ClassicalNotes.json",
+"name": "AMS Classical Notes",
+"description": "Pure academic LaTeX article style (10pt, A4, Latin Modern): centered small-caps title and section headings, indeted paragraphs, borderless amsthm theorems/definitions/remarks, and classic hyperref blue links."
 }
 ]
