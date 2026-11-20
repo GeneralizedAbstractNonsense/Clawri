@@ -2,6 +2,8 @@
 /* ============================================================================
    MODULE 10: Clawri.UI (Modals, Custom Inline Command Editor, Home & Help)
    ============================================================================ */
+window.Clawri = window.Clawri || {};
+
 Clawri.UI = (function() {
   const { escapeHtml } = Clawri.Utils;
   let homeActiveTab = "active";
