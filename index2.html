@@ -23,11 +23,9 @@
   <!-- JSZip for Self-Contained Blog .zip & .tex+PNG Bundle Exports -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
-  <!-- ========================================================================
-       MODULE 0: STUDIO UI STYLES (Ready to extract to css/studio.css)
-       ======================================================================== -->
-
-  </head>
+  <!-- MODULE 0: Studio UI Styles -->
+  <link rel="stylesheet" href="css/studio.css" id="studio-ui-css">
+</head>
 <body>
 
 <div class="lazy-app">
@@ -513,51 +511,23 @@
 
 <input type="file" id="hidden-file-input" style="display:none;" />
 
-<script>
-/* ============================================================================
-   CLAWRI MODULAR ARCHITECTURE (window.Clawri)
-   Each section below is completely self-contained and ready to be extracted
-   1-to-1 into separate .js files on GitHub.
-   ============================================================================ */
-window.Clawri = window.Clawri || {};
 
-/* ============================================================================
-   MODULE 1: Clawri.Utils (Shared Pure Helpers)
-   ============================================================================ */
-  /* ============================================================================
-   MODULE 2: Clawri.Config (Themes, Macros, Labels & Default Showcase)
-   ============================================================================ */
-  /* ============================================================================
-   MODULE 3: Clawri.Commands (DECLARATIVE COMMANDS REGISTRY — EASY TO EDIT!)
-   Want to add or edit an inline command? Just add an entry to INLINE_COMMANDS!
-   ============================================================================ */
-  /* ============================================================================
-   MODULE 4: Clawri.State (Multi-Project Persistence & Trash)
-   ============================================================================ */
-  /* ============================================================================
-   MODULE 5: Clawri.Graphics (Diagrams, Sets, Graphs, Trees, Clipped 2D/3D Plots)
-   ============================================================================ */
-  /* ============================================================================
-   MODULE 6: Clawri.Compiler (ClawriTeX -> HTML & LaTeX Macro Preprocessor)
-   ============================================================================ */
-  /* ============================================================================
-   MODULE 7: Clawri.Preview (NO AUTO-SCROLL ON TYPE/CLICK + Double-Click Sync)
-   ============================================================================ */
-  /* ============================================================================
-   MODULE 8: Clawri.VFS (Hierarchical File Tree, Drag & Drop & Virtual Terminal)
-   ============================================================================ */
-  /* ============================================================================
-   MODULE 9: Clawri.Editor (CodeMirror 5 Vim, Autocomplete & Command Bar)
-   ============================================================================ */
-  /* ============================================================================
-   MODULE 10: Clawri.UI (Modals, Custom Inline Command Editor, Home & Help)
-   ============================================================================ */
-  /* ============================================================================
-   MODULE 11: Clawri.Exporters (Blog .zip, HTML, PDF, .tex+PNG, .clawri, RSS)
-   ============================================================================ */
-  /* ============================================================================
-   MODULE 12: Clawri.Bootstrap (Global Events, Clock & Initialization)
-   ============================================================================ */
-  </script>
+<script>
+  window.Clawri = window.Clawri || {};
+</script>
+
+
+<script src="js/utils.js"></script>
+<script src="js/config.js"></script>
+<script src="js/commands.js"></script>
+<script src="js/state.js"></script>
+<script src="js/graphics.js"></script>
+<script src="js/compiler.js"></script>
+<script src="js/preview.js"></script>
+<script src="js/vfs.js"></script>
+<script src="js/editor.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/exporters.js"></script>
+<script src="js/bootstrap.js"></script>
 </body>
 </html>
