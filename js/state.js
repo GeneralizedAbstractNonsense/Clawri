@@ -1,6 +1,9 @@
 /* ============================================================================
    MODULE 4: Clawri.State (Multi-Project Persistence & Trash)
    ============================================================================ */
+window.Clawri = window.Clawri || {};
+
+
 Clawri.State = (function() {
   function createDefaultProject(id, title, source) {
     const now = new Date().toISOString();
