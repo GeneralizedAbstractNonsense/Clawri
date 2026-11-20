@@ -1309,7 +1309,7 @@
       <div class="form-grid">
         <div class="form-group full">
           <label>Article Title (H1 & &lt;title&gt;)</label>
-          <input type="text" class="lazy-input" id="meta-title" placeholder="e.g. Enigmas of Death" />
+          <input type="text" class="lazy-input" id="meta-title" placeholder="e.g. Meow" />
         </div>
         <div class="form-group full">
           <label>Subtitle (Optional — or use \subtitle{...} in code)</label>
@@ -3029,7 +3029,7 @@ const LABEL_PRESETS = {
 /* ============================================================================
    4. DEFAULT SHOWCASE DOCUMENT & MULTI-PROJECT VFS STATE
    ============================================================================ */
-const DEFAULT_SAMPLE_SOURCE = `\\title[MATH & POETRY]{Enigmas of Time & Structure}
+const DEFAULT_SAMPLE_SOURCE = `\\title[TEMPLATE]{Template}
 \\subtitle{A Complete Showcase of Clawri v2.0 Commands}
 \\author[Department of Mathematics]{Author Name}
 \\date[Published]{2026/11/20}
@@ -3140,7 +3140,7 @@ function createDefaultProject(id, title, source) {
     updatedAt: now,
     trashed: false,
     meta: {
-      title: title || "Enigmas of Time & Structure",
+      title: title || "Template",
       subtitle: "A Complete Showcase of Clawri v2.0 Commands",
       author: "Author Name",
       date: new Date().toISOString().slice(0, 10).replace(/-/g, '/'),
@@ -3171,7 +3171,7 @@ function createDefaultProject(id, title, source) {
 const DEFAULT_GLOBAL_STATE = {
   activeProjectId: "proj_default",
   projects: [
-    createDefaultProject("proj_default", "Enigmas of Time & Structure", DEFAULT_SAMPLE_SOURCE)
+    createDefaultProject("proj_default", "Template", DEFAULT_SAMPLE_SOURCE)
   ],
   activeTheme: "clean",
   cssByTheme: {
